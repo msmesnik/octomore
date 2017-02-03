@@ -7,16 +7,29 @@ import { expect } from 'chai'
 import getTransformer, * as t from '../src/transform'
 
 describe('data transformer', function () {
-  it('accepts only functions and objects', function () {
-    expect(() => getTransformer()).to.throw()
-    expect(() => getTransformer('foo')).to.throw()
-    expect(() => getTransformer(1)).to.throw()
-    expect(() => getTransformer(() => undefined)).to.not.throw()
-    expect(() => getTransformer({ })).to.not.throw()
+  describe('spec validation', function () {
+    it('accepts only functions and objects', function () {
+      expect(() => t.validateSpec()).to.throw()
+      expect(() => t.validateSpec('foo')).to.throw()
+      expect(() => t.validateSpec(1)).to.throw()
+      expect(() => t.validateSpec(() => undefined)).to.not.throw()
+      expect(() => t.validateSpec({ })).to.not.throw()
+    })
+
+    // it('requires valid transform specs', function () {
+    // })
   })
 
-  it('returns a function', function () {
-    expect(getTransformer(() => undefined)).to.be.a('function')
-    expect(getTransformer({ })).to.be.a('function')
+  describe('transformer', function () {
+    it('returns a function', function () {
+      expect(getTransformer(() => undefined)).to.be.a('function')
+      expect(getTransformer({ })).to.be.a('function')
+    })
+
+    it('applies top level transform function', async function () {
+      const applyTransform = getTransformer((raw) => `${raw}_transformed`)
+
+      expect(await applyTransform('raw')).to.equal('raw_transformed')
+    })
   })
 })
