@@ -1,0 +1,8 @@
+{
+  "string": "some string",
+  "number": 1.234,
+  "list": [ "item 1", "item 2" ],
+  "nested": {
+    "prop": "value"
+  }
+}
