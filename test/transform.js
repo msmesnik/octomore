@@ -101,6 +101,22 @@ describe('data transformer', function () {
       const { arr } = await applyTransform(mockData)
       expect(arr).to.have.all.members([ 'some string', 'value', 2.234 ])
     })
+
+    it('allows iterating over arrays', async function () {
+      const applyTransform = getTransformer({
+        'subset': { src: 'list', transform: (num) => `number: ${num}`, iterate: true, max: 4 }
+      })
+
+      const { subset } = await applyTransform(mockData)
+
+      expect(subset).to.be.an('array')
+      expect(subset.length).to.equal(4)
+
+      subset.forEach((item, index) => {
+        expect(item).to.be.a('string')
+        expect(item).to.equal(`number: ${index}`)
+      })
+    })
   })
 
   describe('function composition', function () {
@@ -114,16 +130,18 @@ describe('data transformer', function () {
       const second = {
         added: true,
         number: true,
-        final: { src: 'added', transform: (str) => `transformed ${str}` }
+        final: { src: 'added', transform: (str) => `transformed ${str}` },
+        list: { transform: (list) => list.slice(0, 3) }
       }
 
       const applyTransform = getTransformer(first, second)
       const transformed = await applyTransform(mockData)
 
-      expect(transformed).to.have.all.keys([ 'added', 'number', 'final' ])
+      expect(transformed).to.have.all.keys([ 'added', 'number', 'final', 'list' ])
       expect(transformed.number).to.equal(1.234)
       expect(transformed.added).to.equal('value')
       expect(transformed.final).to.equal('transformed value')
+      expect(transformed.list).to.deep.equal([ 0, 1, 2 ])
     })
   })
 })

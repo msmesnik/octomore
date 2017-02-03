@@ -62,8 +62,20 @@ export async function getTransformedData (propSpec, targetProp, rawData) {
       return await Promise.all(propSpec.map(async (subSpec) => await getTransformedData(subSpec, targetProp, rawData)))
     }
 
-    const { src: sourceProp = targetProp, transform = noTransform } = propSpec
+    const { src: sourceProp = targetProp, transform = noTransform, iterate } = propSpec
+    const rawValue = objectPath.get(rawData, sourceProp)
 
-    return await transform(objectPath.get(rawData, sourceProp))
+    if (iterate) {
+      const isIterable = Array.isArray(rawValue)
+      const iterable = isIterable ? rawValue : [ rawValue ]
+
+      if (!isIterable) {
+        console.warn('Attempted to iterate over non-array property %s. Coerced it into an array.', sourceProp)
+      }
+
+      return await Promise.map(iterable.slice(0, propSpec.max || iterable.length), transform)
+    }
+
+    return await transform(rawValue)
   }
 }
