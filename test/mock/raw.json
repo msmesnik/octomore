@@ -1,7 +1,7 @@
 {
   "string": "some string",
   "number": 1.234,
-  "list": [ "item 1", "item 2" ],
+  "list": [ 0, 1, 2, 3, 4, 5 ],
   "nested": {
     "prop": "value"
   }
