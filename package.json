@@ -1,0 +1,51 @@
+{
+  "name": "octomore",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "preversion": "npm run lint && npm run test",
+    "babel:transpile": "rm -rf dist/* && babel --no-comments src -d dist",
+    "babel:watch": "npm run babel:transpile -- --watch",
+    "lint": "standard \"src/**/*.js\"",
+    "test": "mocha --require test/helpers/babel-register"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.tailored-apps.com:shared/octomore.git"
+  },
+  "author": "Michael Smesnik <ms@tailored-apps.com>",
+  "license": "ISC",
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "dist/"
+    ]
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.22.0",
+    "bluebird": "^3.4.7",
+    "object-path": "^0.11.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-eslint": "^7.0.0",
+    "babel-plugin-transform-async-to-generator": "^6.22.0",
+    "babel-plugin-transform-es2015-classes": "^6.22.0",
+    "babel-plugin-transform-es2015-destructuring": "^6.22.0",
+    "babel-plugin-transform-es2015-parameters": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.22.0",
+    "babel-preset-node6": "^11.0.0",
+    "babel-register": "^6.22.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.14.1",
+    "eslint-config-standard": "^6.2.0",
+    "eslint-plugin-promise": "^3.3.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "mocha": "^3.2.0",
+    "standard": "^8.6.0"
+  }
+}
