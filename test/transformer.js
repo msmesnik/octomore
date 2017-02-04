@@ -4,7 +4,7 @@
 
 import { expect } from 'chai'
 
-import getTransformer, * as t from '../src/transform'
+import createTransformer, * as t from '../src/transformer'
 
 describe('data transformer', function () {
   const mockData = require('./mock/raw.json')
@@ -25,13 +25,13 @@ describe('data transformer', function () {
 
   describe('specifications', function () {
     it('applies top level transform function', async function () {
-      const applyTransform = getTransformer((raw) => `${raw}_transformed`)
+      const applyTransform = createTransformer((raw) => `${raw}_transformed`)
 
       expect(await applyTransform('raw')).to.equal('raw_transformed')
     })
 
     it('allows boolean specs (include property as is)', async function () {
-      const applyTransform = getTransformer({
+      const applyTransform = createTransformer({
         'string': true
       })
 
@@ -39,7 +39,7 @@ describe('data transformer', function () {
     })
 
     it('allows string specs (rename property)', async function () {
-      const applyTransform = getTransformer({
+      const applyTransform = createTransformer({
         'altered': 'string'
       })
 
@@ -47,7 +47,7 @@ describe('data transformer', function () {
     })
 
     it('allows explicitly specifying source prop', async function () {
-      const applyTransform = getTransformer({
+      const applyTransform = createTransformer({
         'explicit': { src: 'string' }
       })
 
@@ -55,7 +55,7 @@ describe('data transformer', function () {
     })
 
     it('allows deep property access', async function () {
-      const applyTransform = getTransformer({
+      const applyTransform = createTransformer({
         'first': 'nested.prop',
         'second': { src: 'nested.prop' }
       })
@@ -64,7 +64,7 @@ describe('data transformer', function () {
     })
 
     it('passes all raw data to first level transform functions', async function () {
-      const applyTransform = getTransformer({
+      const applyTransform = createTransformer({
         'aggregate': (raw) => raw
       })
 
@@ -73,7 +73,7 @@ describe('data transformer', function () {
     })
 
     it('passes only value of source property to second level transform functions', async function () {
-      const applyTransform = getTransformer({
+      const applyTransform = createTransformer({
         'transformed': { src: 'string', transform: (str) => `transformed ${str}` }
       })
 
@@ -82,7 +82,7 @@ describe('data transformer', function () {
 
     it('allows async transform functions', async function () {
       const transform = async (raw) => await new Promise((resolve) => setTimeout(() => resolve(`promised ${raw}`), 100))
-      const applyTransform = getTransformer({
+      const applyTransform = createTransformer({
         'string': { transform }
       })
 
@@ -90,7 +90,7 @@ describe('data transformer', function () {
     })
 
     it('allows array specs', async function () {
-      const applyTransform = getTransformer({
+      const applyTransform = createTransformer({
         'arr': [
           'string',
           'nested.prop',
@@ -103,7 +103,7 @@ describe('data transformer', function () {
     })
 
     it('allows iterating over arrays', async function () {
-      const applyTransform = getTransformer({
+      const applyTransform = createTransformer({
         'subset': { src: 'list', transform: (num) => `number: ${num}`, iterate: true, max: 4 }
       })
 
@@ -121,8 +121,8 @@ describe('data transformer', function () {
 
   describe('function composition', function () {
     it('returns a function', function () {
-      expect(getTransformer(() => undefined)).to.be.a('function')
-      expect(getTransformer({ })).to.be.a('function')
+      expect(createTransformer(() => undefined)).to.be.a('function')
+      expect(createTransformer({ })).to.be.a('function')
     })
 
     it('calls transformers sequentially', async function () {
@@ -134,7 +134,7 @@ describe('data transformer', function () {
         list: { transform: (list) => list.slice(0, 3) }
       }
 
-      const applyTransform = getTransformer(first, second)
+      const applyTransform = createTransformer(first, second)
       const transformed = await applyTransform(mockData)
 
       expect(transformed).to.have.all.keys([ 'added', 'number', 'final', 'list' ])

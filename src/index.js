@@ -2,6 +2,8 @@
 
 require('babel-polyfill')
 
-import getTransformer from './transform'
+import createDocument from './document'
+import createTransformer from './transform'
+import createHttpRetriever from './retriever/http'
 
-export { getTransformer }
+export { createHttpRetriever, createDocument, createTransformer }

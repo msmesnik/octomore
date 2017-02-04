@@ -4,10 +4,10 @@ import getDebugger from 'debug'
 import objectPath from 'object-path'
 import Promise from 'bluebird'
 
-const debug = getDebugger('octomore:transform')
-const noTransform = (raw) => raw
+const debug = getDebugger('octomore:transformer')
+export const noTransform = (raw) => raw
 
-export default function getTransformer (...specs) {
+export default function createTransformer (...specs) {
   debug('Creating transformer for %s specs', specs.length)
 
   specs.forEach(validateSpec)
@@ -36,7 +36,7 @@ export function validateSpec (spec) {
   const isObject = specType === 'object'
 
   if (!isFunction && !isObject) {
-    throw new Error('getTransformer accepts only functions or objects as its parameter.')
+    throw new Error('createTransformer accepts only functions or objects as its parameter.')
   }
 
   const validTypes = [ 'boolean', 'string', 'function', 'object' ]
