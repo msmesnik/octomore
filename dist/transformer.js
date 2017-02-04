@@ -59,7 +59,7 @@ let getTransformedData = exports.getTransformedData = (() => {
         const max = _propSpec$max === undefined ? iterable.length : _propSpec$max;
 
 
-        debug('Target "%s" - iterating over value of source property "%s" (max %n items)', targetProp, sourceProp, max);
+        debug('Target "%s" - iterating over value of source property "%s" (max %s items)', targetProp, sourceProp, max);
 
         if (!isIterable) {
           console.warn('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp);
