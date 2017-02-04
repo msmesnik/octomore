@@ -81,7 +81,7 @@ describe('data transformer', function () {
     })
 
     it('allows async transform functions', async function () {
-      const transform = async (raw) => await new Promise((resolve) => setTimeout(() => resolve(`promised ${raw}`), 100))
+      const transform = async (raw) => await new Promise((resolve) => setTimeout(() => resolve(`promised ${raw}`), 10))
       const applyTransform = createTransformer({
         'string': { transform }
       })
