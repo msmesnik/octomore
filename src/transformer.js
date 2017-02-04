@@ -86,7 +86,7 @@ export async function getTransformedData (propSpec, targetProp, rawData) {
       const iterable = isIterable ? rawValue : [ rawValue ]
       const { max = iterable.length } = propSpec
 
-      debug('Target "%s" - iterating over value of source property "%s" (max %n items)', targetProp, sourceProp, max)
+      debug('Target "%s" - iterating over value of source property "%s" (max %s items)', targetProp, sourceProp, max)
 
       if (!isIterable) {
         console.warn('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp)
