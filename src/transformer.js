@@ -89,7 +89,7 @@ export async function getTransformedData (propSpec, targetProp, rawData) {
       debug('Target "%s" - iterating over value of source property "%s" (max %n items)', targetProp, sourceProp, max)
 
       if (!isIterable) {
-        console.warn('Attempted to iterate over non-array property %s. Coerced it into an array.', sourceProp)
+        console.warn('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp)
       }
 
       return await Promise.map(iterable.slice(0, max), transform)
