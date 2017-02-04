@@ -26,10 +26,11 @@
     "node": ">=6.0.0"
   },
   "dependencies": {
-    "babel-polyfill": "^6.22.0",
     "bluebird": "^3.4.7",
     "debug": "^2.6.0",
-    "object-path": "^0.11.3"
+    "object-path": "^0.11.3",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
