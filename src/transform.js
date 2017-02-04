@@ -71,13 +71,13 @@ export async function getTransformedData (propSpec, targetProp, rawData) {
     return await propSpec(rawData)
   }
 
+  if (Array.isArray(propSpec)) {
+    debug('Array of specs encountered for property "%s" - recursing', targetProp)
+
+    return await Promise.all(propSpec.map(async (subSpec) => await getTransformedData(subSpec, targetProp, rawData)))
+  }
+
   if (specType === 'object') {
-    if (Array.isArray(propSpec)) {
-      debug('Array of specs encountered for property "%s" - recursing', targetProp)
-
-      return await Promise.all(propSpec.map(async (subSpec) => await getTransformedData(subSpec, targetProp, rawData)))
-    }
-
     const { src: sourceProp = targetProp, transform = noTransform, iterate } = propSpec
     const rawValue = objectPath.get(rawData, sourceProp)
 
