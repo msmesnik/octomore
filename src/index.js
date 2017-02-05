@@ -1,7 +1,8 @@
 'use strict'
 
 import createDocument from './document'
-import createTransformer from './transformer'
+import createFileRetriever from './retriever/file'
 import createHttpRetriever from './retriever/http'
+import createTransformer from './transformer'
 
-export { createHttpRetriever, createDocument, createTransformer }
+export { createDocument, createFileRetriever, createHttpRetriever, createTransformer }
