@@ -3,10 +3,11 @@
 import getDebugger from 'debug'
 
 import { noTransform } from './transformer'
+import createPseudoCache from './cache/pseudo'
 
 const debug = getDebugger('octomore:document')
 
-export default function defineDocument ({ retriever, uriTemplate, getUri, transformer = noTransform, friendlyName = 'Document' }) {
+export default function defineDocument ({ retriever, uriTemplate, getUri, transformer = noTransform, rawCache = createPseudoCache(), transformedCache = createPseudoCache(), friendlyName = 'Document' }) {
   if (typeof retriever !== 'function') {
     throw new Error('A retriever function must be provided when defining a document.')
   }
@@ -35,7 +36,7 @@ export default function defineDocument ({ retriever, uriTemplate, getUri, transf
   }
 
   getTransformedData.retriever = retriever
-  getTransformedData.cache = async () => 'cache'
+  getTransformedData.cache = { raw: rawCache, transformed: transformedCache }
 
   return getTransformedData
 }
