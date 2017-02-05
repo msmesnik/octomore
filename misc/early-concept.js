@@ -1,5 +1,7 @@
 'use strict'
 
+// !
+
 const getUTCDate = () => true
 // const getTransformer = () => async () => true
 const getFullUrl = (path) => path
@@ -74,7 +76,7 @@ const getArticle = defineDocument({
   transformer: transformArticle
 })
 
-(async () => {
+;(async () => {
   const transformedData = await getArticle(4694615)
 
   console.dir(transformedData)
