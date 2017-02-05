@@ -54,7 +54,7 @@ describe('document', function () {
     })
   })
 
-  describe('caching', function () {
+  describe('cache: retrieval', function () {
     // Creates a cache object that will always return the string "cached" for any resource
     const createMockCache = () => ({
       getId: (uri) => uri,
@@ -86,6 +86,63 @@ describe('document', function () {
       })
 
       expect(await doc()).to.equal('cached')
+    })
+  })
+
+  describe('cache: storing', function () {
+    // Creates a cache object that will simply push data to an array when "storing"
+    const createMockCache = () => {
+      let cachedItems = [ ]
+
+      return {
+        getId: (uri) => uri,
+        exists: (uri) => false,
+        isOutdated: (uri) => true,
+        store: (uri, data) => {
+          cachedItems.push(data)
+          return data
+        },
+        retrieve: (uri) => 'cached',
+        getRemainingLifetime: (uri) => 0,
+        getCachedItems: () => cachedItems
+      }
+    }
+
+    it('stores raw data in cache after retrieving', async function () {
+      const cache = createMockCache()
+      const doc = createDocument({
+        retriever: () => 'fresh',
+        uriTemplate: '',
+        rawCache: cache
+      })
+
+      expect(cache.getCachedItems().length).to.equal(0)
+
+      await doc()
+
+      const items = await cache.getCachedItems()
+
+      expect(items.length).to.equal(1)
+      expect(items[0]).to.equal('fresh')
+    })
+
+    it('stores transformed data in cache after transforming', async function () {
+      const cache = createMockCache()
+      const doc = createDocument({
+        retriever: () => 'fresh',
+        transformer: () => 'transformed',
+        uriTemplate: '',
+        transformedCache: cache
+      })
+
+      expect(cache.getCachedItems().length).to.equal(0)
+
+      await doc()
+
+      const items = await cache.getCachedItems()
+
+      expect(items.length).to.equal(1)
+      expect(items[0]).to.equal('transformed')
     })
   })
 })
