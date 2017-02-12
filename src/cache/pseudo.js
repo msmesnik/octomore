@@ -2,7 +2,7 @@
 
 export default function createPseudoCache () {
   return {
-    lifetime: () => 0,
+    getConfig: () => ({ }),
     exists: (uri) => false,
     isOutdated: (uri) => true,
     store: (uri, data) => data,

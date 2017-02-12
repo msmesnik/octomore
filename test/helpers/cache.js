@@ -1,7 +1,7 @@
 'use strict'
 
 export const propTypes = {
-  lifetime: 'function',
+  getConfig: 'function',
   exists: 'function',
   isOutdated: 'function',
   store: 'function',
