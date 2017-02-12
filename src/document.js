@@ -54,8 +54,13 @@ export default function defineDocument ({ retriever, uriTemplate, getUri, transf
     return transformed
   }
 
-  getTransformedData.retriever = retriever
-  getTransformedData.cache = { raw: rawCache, transformed: transformedCache }
+  getTransformedData.config = {
+    retriever,
+    rawCache,
+    transformedCache,
+    getFullUri,
+    getCacheId
+  }
 
   return getTransformedData
 }

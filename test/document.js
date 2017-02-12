@@ -32,13 +32,12 @@ describe('document', function () {
       expect(() => create({ getUri: () => '' })).to.not.throw()
     })
 
-    it('returns a function that also exposes "retriever" and "cache" properties', async function () {
+    it('returns a function that also exposes a "config" object', async function () {
       const doc = createDocument({ uriTemplate: '', retriever: () => undefined })
 
       expect(doc).to.be.a('function')
-      expect(doc.retriever).to.be.a('function')
-      expect(doc.cache).to.be.an('object')
-      expect(doc.cache).to.have.all.keys([ 'raw', 'transformed' ])
+      expect(doc.config).to.be.an('object')
+      expect(doc.config).to.have.all.keys([ 'retriever', 'rawCache', 'transformedCache', 'getFullUri', 'getCacheId' ])
     })
 
     it('retrieves data and applies transformation', async function () {
