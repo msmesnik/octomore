@@ -3,11 +3,20 @@
 /* eslint-env mocha */
 
 import { expect } from 'chai'
+import fs from 'fs'
 
 import { verifyCacheProps } from './helpers/cache'
 import createFileCache from '../src/cache/file'
 
 describe('file cache', function () {
+  const directory = 'test/mock/cache'
+  const createMockCache = (config = { }) => createFileCache({ directory, ...config })
+  const cleanup = (fullPath) => {
+    try {
+      fs.unlinkSync(fullPath)
+    } catch (e) { }
+  }
+
   it('exposes the correct properties', function () {
     verifyCacheProps(createFileCache(), expect)
   })
@@ -23,9 +32,53 @@ describe('file cache', function () {
   })
 
   it('checks if a cache files exists', async function () {
-    const cache = createFileCache({ directory: 'test/mock/cache' })
+    const cache = createMockCache()
 
     expect(await cache.exists('faux')).to.equal(false)
     expect(await cache.exists('mock')).to.equal(true)
+  })
+
+  it('retrieves cached content', async function () {
+    const cache = createMockCache()
+    const contents = await cache.retrieve('mock')
+
+    expect(contents).to.be.an('object')
+    expect(contents).to.deep.equal({ foo: 'bar' })
+  })
+
+  describe('storing', function () {
+    const id = 'created'
+    const fullPath = `${directory}/${id}.json`
+
+    after(() => cleanup(fullPath))
+
+    it('stores contents in a cache file', async function () {
+      const cache = createMockCache()
+
+      expect(() => fs.readFileSync(fullPath)).to.throw()
+
+      await cache.store(id, 'foo')
+
+      const contents = fs.readFileSync(fullPath, 'utf8')
+      expect(contents).to.equal('"foo"')
+    })
+  })
+
+  describe('removal', function () {
+    const id = 'removed'
+    const fullPath = `${directory}/${id}.json`
+
+    before(() => fs.writeFileSync(fullPath, 'foo', 'utf8'))
+    after(() => cleanup(fullPath))
+
+    it('removes a cache file', async function () {
+      const cache = createMockCache()
+
+      expect(fs.readFileSync(fullPath, 'utf8')).to.equal('foo')
+
+      await cache.remove(id)
+
+      expect(() => fs.readFileSync(fullPath)).to.throw()
+    })
   })
 })
