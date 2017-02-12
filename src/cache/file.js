@@ -36,6 +36,7 @@ export default function createFileCache ({ lifetime = 0, directory = 'cache', ex
     isOutdated: (id) => undefined,
     store: (id, data) => undefined,
     retrieve: (id) => undefined,
+    remove: (id) => undefined,
     getRemainingLifetime: (id) => undefined
   }
 }

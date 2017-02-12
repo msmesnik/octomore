@@ -6,6 +6,7 @@ export const propTypes = {
   isOutdated: 'function',
   store: 'function',
   retrieve: 'function',
+  remove: 'function',
   getRemainingLifetime: 'function'
 }
 

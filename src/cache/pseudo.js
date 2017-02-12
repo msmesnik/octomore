@@ -7,6 +7,7 @@ export default function createPseudoCache () {
     isOutdated: (id) => true,
     store: (id, data) => data,
     retrieve: (id) => undefined,
+    remove: (id) => true,
     getRemainingLifetime: (id) => 0
   }
 }
