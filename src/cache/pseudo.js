@@ -3,10 +3,10 @@
 export default function createPseudoCache () {
   return {
     getConfig: () => ({ }),
-    exists: (uri) => false,
-    isOutdated: (uri) => true,
-    store: (uri, data) => data,
-    retrieve: (uri) => undefined,
-    getRemainingLifetime: (uri) => 0
+    exists: (id) => false,
+    isOutdated: (id) => true,
+    store: (id, data) => data,
+    retrieve: (id) => undefined,
+    getRemainingLifetime: (id) => 0
   }
 }

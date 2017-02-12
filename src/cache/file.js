@@ -13,10 +13,10 @@ export default function createFileCache ({ lifetime = 0, directory = 'cache', ex
 
   return {
     getConfig: () => ({ lifetime, directory, extension }),
-    exists: (uri) => undefined,
-    isOutdated: (uri) => undefined,
-    store: (uri, data) => undefined,
-    retrieve: (uri) => undefined,
-    getRemainingLifetime: (uri) => undefined
+    exists: (id) => undefined,
+    isOutdated: (id) => undefined,
+    store: (id, data) => undefined,
+    retrieve: (id) => undefined,
+    getRemainingLifetime: (id) => undefined
   }
 }
