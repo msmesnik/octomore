@@ -21,4 +21,11 @@ describe('file cache', function () {
     expect(configured).to.be.an('object')
     expect(configured).to.deep.equal(cfg)
   })
+
+  it('checks if a cache files exists', async function () {
+    const cache = createFileCache({ directory: 'test/mock/cache' })
+
+    expect(await cache.exists('faux')).to.equal(false)
+    expect(await cache.exists('mock')).to.equal(true)
+  })
 })
