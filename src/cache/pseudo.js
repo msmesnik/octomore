@@ -1,13 +1,12 @@
 'use strict'
 
-export default function createPseudoCache ({ lifetime = 0 } = { }) {
+export default function createPseudoCache () {
   return {
-    lifetime: () => lifetime,
-    getId: (uri) => uri,
+    lifetime: () => 0,
     exists: (uri) => false,
     isOutdated: (uri) => true,
     store: (uri, data) => data,
     retrieve: (uri) => undefined,
-    getRemainingLifetime: (uri) => lifetime
+    getRemainingLifetime: (uri) => 0
   }
 }

@@ -1,13 +1,15 @@
 'use strict'
 
+import crypto from 'crypto'
 import getDebugger from 'debug'
 
 import { noTransform } from './transformer'
 import createPseudoCache from './cache/pseudo'
 
 const debug = getDebugger('octomore:document')
+const hashString = (str, algorithm = 'md5') => crypto.createHash(algorithm).update(str).digest('hex')
 
-export default function defineDocument ({ retriever, uriTemplate, getUri, transformer = noTransform, rawCache = createPseudoCache(), transformedCache = createPseudoCache(), friendlyName = 'Document' }) {
+export default function defineDocument ({ retriever, uriTemplate, getUri, transformer = noTransform, rawCache = createPseudoCache(), transformedCache = createPseudoCache(), getCacheId = hashString, friendlyName = 'Document' }) {
   if (typeof retriever !== 'function') {
     throw new Error('A retriever function must be provided when defining a document.')
   }
@@ -17,36 +19,37 @@ export default function defineDocument ({ retriever, uriTemplate, getUri, transf
   }
 
   const getFullUri = getUri || ((id) => uriTemplate.replace(/\{id\}/i, id))
-  const isInCache = async (uri, cache) => await cache.exists(uri) && !(await cache.isOutdated(uri))
+  const isInCache = async (id, cache) => await cache.exists(id) && !(await cache.isOutdated(id))
 
   let getTransformedData = async (id, options) => {
     const debugDoc = (msg, ...params) => debug(`[%s %s] ${msg}`, friendlyName, id, ...params)
     const uri = await getFullUri(id, options)
-    const cachedTransformedData = await isInCache(uri, transformedCache)
+    const cacheId = await getCacheId(uri)
+    const cachedTransformedData = await isInCache(cacheId, transformedCache)
 
     if (cachedTransformedData) {
-      debug('Returning cached transformed data for uri %s.', uri)
+      debug('Returning cached transformed data for uri %s (cache id %s).', uri, cacheId)
 
-      return await transformedCache.retrieve(uri)
+      return await transformedCache.retrieve(cacheId)
     }
 
-    const cachedRawData = await isInCache(uri, rawCache)
+    const cachedRawData = await isInCache(cacheId, rawCache)
 
-    debugDoc('Retrieving raw data from %s, full uri is %s', cachedRawData ? 'cache' : 'source', uri)
+    debugDoc('Retrieving raw data from %s, full uri is %s (cache id %s)', cachedRawData ? 'cache' : 'source', uri, cacheId)
 
-    const raw = cachedRawData ? await rawCache.retrieve(uri) : await retriever(uri, options)
+    const raw = cachedRawData ? await rawCache.retrieve(cacheId) : await retriever(uri, options)
 
     debugDoc('Raw data retrieved - applying transformation')
 
     if (!cachedRawData) {
-      await rawCache.store(uri, raw)
+      await rawCache.store(cacheId, raw)
     }
 
     const transformed = await transformer(raw)
 
     debugDoc('Transformation applied')
 
-    await transformedCache.store(uri, transformed)
+    await transformedCache.store(cacheId, transformed)
 
     return transformed
   }
