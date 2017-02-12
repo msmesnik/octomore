@@ -56,7 +56,6 @@ describe('document', function () {
   describe('cache: retrieval', function () {
     // Creates a cache object that will always return the string "cached" for any resource
     const createMockCache = () => ({
-      getId: (uri) => uri,
       exists: (uri) => true,
       isOutdated: (uri) => false,
       store: (uri, data) => data,

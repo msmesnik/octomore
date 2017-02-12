@@ -81,4 +81,23 @@ describe('file cache', function () {
       expect(() => fs.readFileSync(fullPath)).to.throw()
     })
   })
+
+  describe('lifetime', function () {
+    const id = 'lifetime'
+    const fullPath = `${directory}/${id}.json`
+    const cache = createMockCache({ lifetime: 5 })
+
+    before(() => fs.writeFileSync(fullPath, 'foo', 'utf8'))
+    after(() => cleanup(fullPath))
+
+    it('returns remaining lifetime in seconds', async function () {
+      expect(await cache.getRemainingLifetime('mock')).to.equal(0)
+      expect(await cache.getRemainingLifetime('lifetime')).to.be.within(4, 5)
+    })
+
+    it('determines if a cache file is outdated', async function () {
+      expect(await cache.isOutdated('mock')).to.equal(true)
+      expect(await cache.isOutdated('lifetime')).to.equal(false)
+    })
+  })
 })
