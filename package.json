@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "preversion": "npm run lint && npm run test",
+    "preversion": "npm run lint && npm run test && npm run babel:transpile && git add -A dist/* && git commit -m \"transpile\"",
     "babel:transpile": "rm -rf dist/* && babel --no-comments src -d dist",
     "babel:watch": "npm run babel:transpile -- --watch",
     "lint": "standard \"src/**/*.js\"",
