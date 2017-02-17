@@ -9,7 +9,7 @@ import createPseudoCache from './cache/pseudo'
 const debug = getDebugger('octomore:document')
 const hashString = (str, algorithm = 'md5') => crypto.createHash(algorithm).update(str).digest('hex')
 
-export default function defineDocument ({ retriever, uriTemplate, getUri, transformer = noTransform, rawCache = createPseudoCache(), transformedCache = createPseudoCache(), getCacheId = hashString, friendlyName = 'Document' }) {
+export default function defineDocument ({ retriever, uriTemplate, getUri = (id) => `${id}`, transformer = noTransform, rawCache = createPseudoCache(), transformedCache = createPseudoCache(), getCacheId = hashString, friendlyName = 'Document' }) {
   if (typeof retriever !== 'function') {
     throw new Error('A retriever function must be provided when defining a document.')
   }
@@ -18,7 +18,7 @@ export default function defineDocument ({ retriever, uriTemplate, getUri, transf
     throw new Error('You must provide either an "uriTemplate" string or a "getUri" function when creating a new document.')
   }
 
-  const getFullUri = getUri || ((id) => uriTemplate.replace(/\{id\}/i, id))
+  const getFullUri = uriTemplate ? ((id) => uriTemplate.replace(/\{id\}/i, id)) : getUri
   const isInCache = async (id, cache) => await cache.exists(id) && !(await cache.isOutdated(id))
 
   let getTransformedData = async (id, options) => {

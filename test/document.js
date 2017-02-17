@@ -19,19 +19,6 @@ describe('document', function () {
       expect(() => create({ retriever: () => undefined })).to.not.throw()
     })
 
-    it('requires either an uriTemplate string or a getUri function', function () {
-      const create = (opts) => createDocument({ retriever: () => undefined, ...opts })
-
-      expect(() => create({ })).to.throw()
-      expect(() => create({ uriTemplate: false })).to.throw()
-      expect(() => create({ uriTemplate: () => '' })).to.throw()
-      expect(() => create({ uriTemplate: '' })).to.not.throw()
-
-      expect(() => create({ getUri: false })).to.throw()
-      expect(() => create({ getUri: '' })).to.throw()
-      expect(() => create({ getUri: () => '' })).to.not.throw()
-    })
-
     it('returns a function that also exposes a "config" object', async function () {
       const doc = createDocument({ uriTemplate: '', retriever: () => undefined })
 
