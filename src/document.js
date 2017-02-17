@@ -18,7 +18,7 @@ export default function defineDocument ({ retriever, uriTemplate, getUri = (id) 
     throw new Error('You must provide either an "uriTemplate" string or a "getUri" function when creating a new document.')
   }
 
-  const getFullUri = uriTemplate ? ((id) => uriTemplate.replace(/\{id\}/i, id)) : getUri
+  const getFullUri = uriTemplate ? (id) => uriTemplate.replace(/\{id\}/i, id) : getUri
   const isInCache = async (id, cache) => await cache.exists(id) && !(await cache.isOutdated(id))
 
   let getTransformedData = async (id, options) => {
