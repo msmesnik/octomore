@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createTransformer = exports.createPseudoCache = exports.createHttpRetriever = exports.createFileRetriever = exports.createFileCache = exports.createDocument = undefined;
+exports.createTransformer = exports.createPseudoCache = exports.createHttpRetriever = exports.createFileRetriever = exports.createFileCache = exports.createDocument = exports.createAdditiveTransformer = undefined;
 
 var _document = require('./document');
 
@@ -31,6 +31,7 @@ var _transformer2 = _interopRequireDefault(_transformer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+exports.createAdditiveTransformer = _transformer.createAdditiveTransformer;
 exports.createDocument = _document2.default;
 exports.createFileCache = _file2.default;
 exports.createFileRetriever = _file4.default;

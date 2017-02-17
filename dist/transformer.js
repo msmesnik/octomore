@@ -8,7 +8,7 @@ exports.getTransformedData = exports.noTransform = undefined;
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 let getTransformedData = exports.getTransformedData = (() => {
-  var _ref4 = _asyncToGenerator(function* (propSpec, targetProp, rawData) {
+  var _ref6 = _asyncToGenerator(function* (propSpec, targetProp, rawData) {
     const specType = typeof propSpec;
 
     if (specType === 'boolean') {
@@ -33,12 +33,12 @@ let getTransformedData = exports.getTransformedData = (() => {
       debug('Array of specs encountered for property "%s" - recursing', targetProp);
 
       return yield _bluebird2.default.all(propSpec.map((() => {
-        var _ref5 = _asyncToGenerator(function* (subSpec) {
+        var _ref7 = _asyncToGenerator(function* (subSpec) {
           return yield getTransformedData(subSpec, targetProp, rawData);
         });
 
-        return function (_x10) {
-          return _ref5.apply(this, arguments);
+        return function (_x13) {
+          return _ref7.apply(this, arguments);
         };
       })()));
     }
@@ -72,12 +72,13 @@ let getTransformedData = exports.getTransformedData = (() => {
     }
   });
 
-  return function getTransformedData(_x7, _x8, _x9) {
-    return _ref4.apply(this, arguments);
+  return function getTransformedData(_x10, _x11, _x12) {
+    return _ref6.apply(this, arguments);
   };
 })();
 
 exports.default = createTransformer;
+exports.createAdditiveTransformer = createAdditiveTransformer;
 exports.validateSpec = validateSpec;
 
 var _debug = require('debug');
@@ -141,6 +142,33 @@ function createTransformer() {
 
     return function (_x) {
       return _ref.apply(this, arguments);
+    };
+  })();
+}
+
+function createAdditiveTransformer() {
+  for (var _len2 = arguments.length, specs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    specs[_key2] = arguments[_key2];
+  }
+
+  return (() => {
+    var _ref4 = _asyncToGenerator(function* (rawData) {
+      return yield _bluebird2.default.reduce(specs, (() => {
+        var _ref5 = _asyncToGenerator(function* (data, spec) {
+          const applyTransform = createTransformer(spec);
+          const transformed = yield applyTransform(data);
+
+          return _extends({}, data, transformed);
+        });
+
+        return function (_x8, _x9) {
+          return _ref5.apply(this, arguments);
+        };
+      })(), rawData);
+    });
+
+    return function (_x7) {
+      return _ref4.apply(this, arguments);
     };
   })();
 }

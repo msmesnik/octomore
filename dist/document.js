@@ -31,8 +31,9 @@ const hashString = function (str) {
 
 function defineDocument(_ref) {
   let retriever = _ref.retriever,
-      uriTemplate = _ref.uriTemplate,
-      getUri = _ref.getUri;
+      uriTemplate = _ref.uriTemplate;
+  var _ref$getUri = _ref.getUri;
+  let getUri = _ref$getUri === undefined ? id => `${id}` : _ref$getUri;
   var _ref$transformer = _ref.transformer;
   let transformer = _ref$transformer === undefined ? _transformer.noTransform : _ref$transformer;
   var _ref$rawCache = _ref.rawCache;
@@ -52,7 +53,7 @@ function defineDocument(_ref) {
     throw new Error('You must provide either an "uriTemplate" string or a "getUri" function when creating a new document.');
   }
 
-  const getFullUri = getUri || (id => uriTemplate.replace(/\{id\}/i, id));
+  const getFullUri = uriTemplate ? id => uriTemplate.replace(/\{id\}/i, id) : getUri;
   const isInCache = (() => {
     var _ref2 = _asyncToGenerator(function* (id, cache) {
       return (yield cache.exists(id)) && !(yield cache.isOutdated(id));
