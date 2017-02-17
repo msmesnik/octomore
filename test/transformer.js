@@ -144,4 +144,21 @@ describe('data transformer', function () {
       expect(transformed.list).to.deep.equal([ 0, 1, 2 ])
     })
   })
+
+  describe('additive transformer', function () {
+    it('adds transformed properties to raw data', async function () {
+      const rawKeys = Object.keys(mockData)
+      const applyTransform = t.createAdditiveTransformer({
+        added: 'string'
+      }, {
+        second: { src: 'added', transform: (raw) => `transformed ${raw}` }
+      })
+
+      const transformed = await applyTransform(mockData)
+
+      expect(transformed).to.have.all.keys(rawKeys.concat([ 'added', 'second' ]))
+      expect(transformed.added).to.equal('some string')
+      expect(transformed.second).to.equal('transformed some string')
+    })
+  })
 })

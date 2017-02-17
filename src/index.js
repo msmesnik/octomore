@@ -5,9 +5,10 @@ import createFileCache from './cache/file'
 import createFileRetriever from './retriever/file'
 import createHttpRetriever from './retriever/http'
 import createPseudoCache from './cache/pseudo'
-import createTransformer from './transformer'
+import createTransformer, { createAdditiveTransformer } from './transformer'
 
 export {
+  createAdditiveTransformer,
   createDocument,
   createFileCache,
   createFileRetriever,

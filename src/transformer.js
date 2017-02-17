@@ -30,6 +30,15 @@ export default function createTransformer (...specs) {
   }, rawData)
 }
 
+export function createAdditiveTransformer (...specs) {
+  return async (rawData) => await Promise.reduce(specs, async (data, spec) => {
+    const applyTransform = createTransformer(spec)
+    const transformed = await applyTransform(data)
+
+    return { ...data, ...transformed }
+  }, rawData)
+}
+
 export function validateSpec (spec) {
   const specType = typeof spec
   const isFunction = specType === 'function'
