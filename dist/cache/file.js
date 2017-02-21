@@ -38,6 +38,8 @@ function createFileCache() {
   let directory = _ref$directory === undefined ? 'cache' : _ref$directory;
   var _ref$extension = _ref.extension;
   let extension = _ref$extension === undefined ? 'json' : _ref$extension;
+  var _ref$json = _ref.json;
+  let json = _ref$json === undefined ? true : _ref$json;
 
   debug('Creating file cache object. Lifetime is %s sec, cache directory is "%s", file extension is "%s".', lifetime, directory, extension);
 
@@ -74,7 +76,7 @@ function createFileCache() {
       debug('Attempting to write cache file %s', fullPath);
 
       yield _fsExtra2.default.ensureDirAsync(_path2.default.dirname(fullPath));
-      yield _fsExtra2.default.writeFileAsync(fullPath, JSON.stringify(data), { encoding: 'utf8' });
+      yield _fsExtra2.default.writeFileAsync(fullPath, json ? JSON.stringify(data) : data, { encoding: 'utf8' });
 
       debug('Cache file %s written', fullPath);
     });
@@ -93,7 +95,7 @@ function createFileCache() {
 
       debug('Cache file %s read, JSON.parse()ing contents.', fullPath);
 
-      return JSON.parse(raw);
+      return json ? JSON.parse(raw) : raw;
     });
 
     return function retrieve(_x5) {
