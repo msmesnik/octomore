@@ -54,7 +54,7 @@ let getTransformedData = exports.getTransformedData = (() => {
 
       if (iterate) {
         const isIterable = Array.isArray(rawValue);
-        const iterable = isIterable ? rawValue : [rawValue];
+        const iterable = typeof rawValue === 'undefined' ? [] : isIterable ? rawValue : [rawValue];
         var _propSpec$max = propSpec.max;
         const max = _propSpec$max === undefined ? iterable.length : _propSpec$max;
 
