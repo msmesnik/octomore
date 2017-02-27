@@ -92,7 +92,7 @@ export async function getTransformedData (propSpec, targetProp, rawData) {
 
     if (iterate) {
       const isIterable = Array.isArray(rawValue)
-      const iterable = isIterable ? rawValue : [ rawValue ]
+      const iterable = typeof rawValue === 'undefined' ? [ ] : (isIterable ? rawValue : [ rawValue ])
       const { max = iterable.length } = propSpec
 
       debug('Target "%s" - iterating over value of source property "%s" (max %s items)', targetProp, sourceProp, max)
