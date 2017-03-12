@@ -102,6 +102,25 @@ describe('data transformer', function () {
       expect(arr).to.have.all.members([ 'some string', 'value', 2.234 ])
     })
 
+    it('allows object specs on second level', async function () {
+      const applyTransform = createTransformer({
+        modified: {
+          src: 'nested',
+          transform: {
+            prop: true,
+            foo: { src: 'prop', transform: (val) => `transformed ${val}` }
+          }
+        }
+      })
+
+      const { modified } = await applyTransform(mockData)
+
+      expect(modified).to.be.an('object')
+      expect(modified).to.have.all.keys([ 'prop', 'foo' ])
+      expect(modified.prop).to.equal('value')
+      expect(modified.foo).to.equal('transformed value')
+    })
+
     it('allows iterating over arrays', async function () {
       const applyTransform = createTransformer({
         'subset': { src: 'list', transform: (num) => `number: ${num}`, iterate: true, max: 4 }
