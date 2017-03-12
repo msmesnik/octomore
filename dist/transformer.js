@@ -51,6 +51,7 @@ let getTransformedData = exports.getTransformedData = (() => {
             iterate = propSpec.iterate;
 
       const rawValue = _objectPath2.default.get(rawData, sourceProp);
+      const applyTransform = typeof transform === 'object' ? createTransformer(transform) : transform;
 
       if (iterate) {
         const isIterable = Array.isArray(rawValue);
@@ -65,10 +66,10 @@ let getTransformedData = exports.getTransformedData = (() => {
           console.warn('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp);
         }
 
-        return yield _bluebird2.default.map(iterable.slice(0, max), transform);
+        return yield _bluebird2.default.map(iterable.slice(0, max), applyTransform);
       }
 
-      return yield transform(rawValue);
+      return yield applyTransform(rawValue);
     }
   });
 
