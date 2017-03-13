@@ -82,7 +82,7 @@ As the above example demonstrates, value mappings can be specified in various wa
   * `iterate`: iterate over source data, applying transform function to each individual element (defaults to `false`)
   * `max`: maximum amount of items to include when iterating over source data (defaults to no limit)
 
-All transformation functions can be async or Promise returning functions, and all source property names support (object-path)[https://github.com/mariocasciaro/object-path] notation. Since `createTransformer` returns a function, it can be used whereever transformation functions are supported. This means you can nest transformers for more complex scenarios while keeping the individual pieces small and testable.
+All source property names support [object-path](https://github.com/mariocasciaro/object-path) notation and all transformation functions can (but do not have to) be async or Promise returning functions. Since `createTransformer` returns a function, it can be used whereever transformation functions are supported. This means you can nest transformers for more complex scenarios while keeping the individual pieces small and testable.
 
 ### Documents
 
