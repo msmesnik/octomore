@@ -3,7 +3,7 @@
 const { expect } = require('chai')
 const path = require('path')
 
-const { createFileRetriever } = require('../src')
+const { createFileRetriever } = require('../')
 
 describe('retriever', function () {
   describe('file retriever', function () {
