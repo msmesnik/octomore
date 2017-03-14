@@ -1,13 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getTransformedData = exports.noTransform = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-let getTransformedData = exports.getTransformedData = (() => {
+let getTransformedData = (() => {
   var _ref6 = _asyncToGenerator(function* (propSpec, targetProp, rawData) {
     const specType = typeof propSpec;
 
@@ -20,7 +11,7 @@ let getTransformedData = exports.getTransformedData = (() => {
     if (specType === 'string') {
       debug('Mapping original name "%s" to target property "%s"', propSpec, targetProp);
 
-      return _objectPath2.default.get(rawData, propSpec);
+      return objectPath.get(rawData, propSpec);
     }
 
     if (specType === 'function') {
@@ -32,7 +23,7 @@ let getTransformedData = exports.getTransformedData = (() => {
     if (Array.isArray(propSpec)) {
       debug('Array of specs encountered for property "%s" - recursing', targetProp);
 
-      return yield _bluebird2.default.all(propSpec.map((() => {
+      return yield Promise.all(propSpec.map((() => {
         var _ref7 = _asyncToGenerator(function* (subSpec) {
           return yield getTransformedData(subSpec, targetProp, rawData);
         });
@@ -44,21 +35,14 @@ let getTransformedData = exports.getTransformedData = (() => {
     }
 
     if (specType === 'object') {
-      var _propSpec$src = propSpec.src;
-      const sourceProp = _propSpec$src === undefined ? targetProp : _propSpec$src;
-      var _propSpec$transform = propSpec.transform;
-      const transform = _propSpec$transform === undefined ? noTransform : _propSpec$transform,
-            iterate = propSpec.iterate;
-
-      const rawValue = _objectPath2.default.get(rawData, sourceProp);
+      const { src: sourceProp = targetProp, transform = noTransform, iterate } = propSpec;
+      const rawValue = objectPath.get(rawData, sourceProp);
       const applyTransform = typeof transform === 'object' ? createTransformer(transform) : transform;
 
       if (iterate) {
         const isIterable = Array.isArray(rawValue);
         const iterable = typeof rawValue === 'undefined' ? [] : isIterable ? rawValue : [rawValue];
-        var _propSpec$max = propSpec.max;
-        const max = _propSpec$max === undefined ? iterable.length : _propSpec$max;
-
+        const { max = iterable.length } = propSpec;
 
         debug('Target "%s" - iterating over value of source property "%s" (max %s items)', targetProp, sourceProp, max);
 
@@ -66,7 +50,7 @@ let getTransformedData = exports.getTransformedData = (() => {
           console.warn('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp);
         }
 
-        return yield _bluebird2.default.map(iterable.slice(0, max), applyTransform);
+        return yield Promise.map(iterable.slice(0, max), applyTransform);
       }
 
       return yield applyTransform(rawValue);
@@ -78,41 +62,23 @@ let getTransformedData = exports.getTransformedData = (() => {
   };
 })();
 
-exports.default = createTransformer;
-exports.createAdditiveTransformer = createAdditiveTransformer;
-exports.validateSpec = validateSpec;
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var _debug = require('debug');
+const getDebugger = require('debug');
+const objectPath = require('object-path');
+const Promise = require('bluebird');
 
-var _debug2 = _interopRequireDefault(_debug);
+const debug = getDebugger('octomore:transformer');
+const noTransform = raw => raw;
 
-var _objectPath = require('object-path');
-
-var _objectPath2 = _interopRequireDefault(_objectPath);
-
-var _bluebird = require('bluebird');
-
-var _bluebird2 = _interopRequireDefault(_bluebird);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _bluebird2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _bluebird2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-const debug = (0, _debug2.default)('octomore:transformer');
-const noTransform = exports.noTransform = raw => raw;
-
-function createTransformer() {
-  for (var _len = arguments.length, specs = Array(_len), _key = 0; _key < _len; _key++) {
-    specs[_key] = arguments[_key];
-  }
-
+function createTransformer(...specs) {
   debug('Creating transformer for %s specs', specs.length);
 
   specs.forEach(validateSpec);
 
   return (() => {
     var _ref = _asyncToGenerator(function* (rawData) {
-      return yield _bluebird2.default.reduce(specs, (() => {
+      return yield Promise.reduce(specs, (() => {
         var _ref2 = _asyncToGenerator(function* (data, spec, index) {
           if (typeof spec === 'function') {
             debug('Spec at index %s is a function', index);
@@ -122,11 +88,9 @@ function createTransformer() {
 
           debug('Spec at index %s is an object', index);
 
-          return yield _bluebird2.default.reduce(Object.keys(spec), (() => {
+          return yield Promise.reduce(Object.keys(spec), (() => {
             var _ref3 = _asyncToGenerator(function* (obj, targetProp) {
-              return _extends({}, obj, {
-                [targetProp]: yield getTransformedData(spec[targetProp], targetProp, data)
-              });
+              return Object.assign({}, obj, { [targetProp]: yield getTransformedData(spec[targetProp], targetProp, data) });
             });
 
             return function (_x5, _x6) {
@@ -147,19 +111,15 @@ function createTransformer() {
   })();
 }
 
-function createAdditiveTransformer() {
-  for (var _len2 = arguments.length, specs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    specs[_key2] = arguments[_key2];
-  }
-
+function createAdditiveTransformer(...specs) {
   return (() => {
     var _ref4 = _asyncToGenerator(function* (rawData) {
-      return yield _bluebird2.default.reduce(specs, (() => {
+      return yield Promise.reduce(specs, (() => {
         var _ref5 = _asyncToGenerator(function* (data, spec) {
           const applyTransform = createTransformer(spec);
           const transformed = yield applyTransform(data);
 
-          return _extends({}, data, transformed);
+          return Object.assign({}, data, transformed);
         });
 
         return function (_x8, _x9) {
@@ -193,3 +153,11 @@ function validateSpec(spec) {
     }
   });
 }
+
+module.exports = {
+  noTransform,
+  createTransformer,
+  createAdditiveTransformer,
+  validateSpec,
+  getTransformedData
+};

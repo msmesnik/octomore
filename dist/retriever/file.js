@@ -1,38 +1,18 @@
-'use strict';
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+const fs = require('fs');
+const Promise = require('bluebird');
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+const readFileAsync = Promise.promisify(fs.readFile);
 
-exports.default = createFileRetriever;
-
-var _fs = require('fs');
-
-var _fs2 = _interopRequireDefault(_fs);
-
-var _bluebird = require('bluebird');
-
-var _bluebird2 = _interopRequireDefault(_bluebird);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _bluebird2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _bluebird2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-const readFileAsync = _bluebird2.default.promisify(_fs2.default.readFile);
-
-function createFileRetriever() {
-  let defaults = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
+module.exports = function createFileRetriever(defaults = {}) {
   return (() => {
-    var _ref = _asyncToGenerator(function* (uri) {
-      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      return yield readFileAsync(uri, _extends({ encoding: 'utf8' }, defaults, options));
+    var _ref = _asyncToGenerator(function* (uri, options = {}) {
+      return yield readFileAsync(uri, Object.assign({ encoding: 'utf8' }, defaults, options));
     });
 
-    return function (_x2) {
+    return function (_x) {
       return _ref.apply(this, arguments);
     };
   })();
-}
+};

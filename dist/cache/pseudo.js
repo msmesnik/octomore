@@ -1,10 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = createPseudoCache;
-function createPseudoCache() {
+module.exports = function createPseudoCache() {
   return {
     getConfig: () => ({}),
     exists: id => false,
@@ -14,4 +8,4 @@ function createPseudoCache() {
     remove: id => true,
     getRemainingLifetime: id => 0
   };
-}
+};
