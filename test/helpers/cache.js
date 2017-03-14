@@ -1,6 +1,6 @@
 'use strict'
 
-export const propTypes = {
+const propTypes = {
   getConfig: 'function',
   exists: 'function',
   isOutdated: 'function',
@@ -10,7 +10,7 @@ export const propTypes = {
   getRemainingLifetime: 'function'
 }
 
-export function verifyCacheProps (cache, expect) {
+function verifyCacheProps (cache, expect) {
   const props = Object.keys(propTypes)
 
   expect(cache).to.be.an('object')
@@ -19,4 +19,9 @@ export function verifyCacheProps (cache, expect) {
   props.forEach((prop) => {
     expect(typeof cache[prop]).to.equal(propTypes[prop])
   })
+}
+
+module.exports = {
+  propTypes,
+  verifyCacheProps
 }

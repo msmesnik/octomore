@@ -1,14 +1,14 @@
 /* eslint-env mocha */
 
-import { expect } from 'chai'
-import fs from 'fs'
+const { expect } = require('chai')
+const fs = require('fs')
 
-import { verifyCacheProps } from './helpers/cache'
-import createFileCache from '../src/cache/file'
+const { verifyCacheProps } = require('./helpers/cache')
+const createFileCache = require('../src/cache/file')
 
 describe('file cache', function () {
   const directory = 'test/mock/cache'
-  const createMockCache = (config = { }) => createFileCache({ directory, ...config })
+  const createMockCache = (config = { }) => createFileCache(Object.assign({ directory }, config))
   const cleanup = (fullPath) => {
     try {
       fs.unlinkSync(fullPath)

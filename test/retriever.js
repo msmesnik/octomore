@@ -1,9 +1,9 @@
 /* eslint-env mocha */
 
-import { expect } from 'chai'
-import path from 'path'
+const { expect } = require('chai')
+const path = require('path')
 
-import { createFileRetriever } from '../src'
+const { createFileRetriever } = require('../src')
 
 describe('retriever', function () {
   describe('file retriever', function () {

@@ -20,10 +20,7 @@ function createTransformer (...specs) {
     debug('Spec at index %s is an object', index)
 
     return await Promise.reduce(Object.keys(spec), async (obj, targetProp) => {
-      return {
-        ...obj,
-        [targetProp]: await getTransformedData(spec[targetProp], targetProp, data)
-      }
+      return Object.assign({ }, obj, { [targetProp]: await getTransformedData(spec[targetProp], targetProp, data) })
     }, { })
   }, rawData)
 }
@@ -33,7 +30,7 @@ function createAdditiveTransformer (...specs) {
     const applyTransform = createTransformer(spec)
     const transformed = await applyTransform(data)
 
-    return { ...data, ...transformed }
+    return Object.assign({ }, data, transformed)
   }, rawData)
 }
 
