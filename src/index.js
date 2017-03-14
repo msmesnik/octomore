@@ -1,13 +1,11 @@
-'use strict'
+const createDocument = require('./document')
+const createFileCache = require('./cache/file')
+const createFileRetriever = require('./retriever/file')
+const createHttpRetriever = require('./retriever/http')
+const createPseudoCache = require('./cache/pseudo')
+const { createTransformer, createAdditiveTransformer } = require('./transformer')
 
-import createDocument from './document'
-import createFileCache from './cache/file'
-import createFileRetriever from './retriever/file'
-import createHttpRetriever from './retriever/http'
-import createPseudoCache from './cache/pseudo'
-import createTransformer, { createAdditiveTransformer } from './transformer'
-
-export {
+module.exports = {
   createAdditiveTransformer,
   createDocument,
   createFileCache,

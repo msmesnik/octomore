@@ -1,15 +1,13 @@
-'use strict'
-
-import getDebugger from 'debug'
-import fs from 'fs-extra'
-import path from 'path'
-import Promise from 'bluebird'
+const getDebugger = require('debug')
+const fs = require('fs-extra')
+const path = require('path')
+const Promise = require('bluebird')
 
 const debug = getDebugger('octomore:cache:file')
 
 Promise.promisifyAll(fs)
 
-export default function createFileCache ({ lifetime = 0, directory = 'cache', extension = 'json', json = true } = { }) {
+module.exports = function createFileCache ({ lifetime = 0, directory = 'cache', extension = 'json', json = true } = { }) {
   debug('Creating file cache object. Lifetime is %s sec, cache directory is "%s", file extension is "%s".', lifetime, directory, extension)
 
   const getFullPath = (id) => path.resolve(directory, `${id}.${extension}`)

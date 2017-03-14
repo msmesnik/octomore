@@ -1,7 +1,5 @@
-'use strict'
+const request = require('request-promise')
 
-import request from 'request-promise'
-
-export default function createHttpRetriever (defaults = { }) {
+module.exports = function createHttpRetriever (defaults = { }) {
   return async (uri, options = { }) => await request({ ...defaults, ...options, uri })
 }

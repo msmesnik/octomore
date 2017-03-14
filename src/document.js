@@ -1,15 +1,13 @@
-'use strict'
+const crypto = require('crypto')
+const getDebugger = require('debug')
 
-import crypto from 'crypto'
-import getDebugger from 'debug'
-
-import { noTransform } from './transformer'
-import createPseudoCache from './cache/pseudo'
+const { noTransform } = require('./transformer')
+const createPseudoCache = require('./cache/pseudo')
 
 const debug = getDebugger('octomore:document')
 const hashString = (str, algorithm = 'md5') => crypto.createHash(algorithm).update(str).digest('hex')
 
-export default function defineDocument ({ retriever, uriTemplate, getUri = (id) => `${id}`, transformer = noTransform, rawCache = createPseudoCache(), transformedCache = createPseudoCache(), getCacheId = hashString, friendlyName = 'Document' }) {
+module.exports = function defineDocument ({ retriever, uriTemplate, getUri = (id) => `${id}`, transformer = noTransform, rawCache = createPseudoCache(), transformedCache = createPseudoCache(), getCacheId = hashString, friendlyName = 'Document' }) {
   if (typeof retriever !== 'function') {
     throw new Error('A retriever function must be provided when defining a document.')
   }

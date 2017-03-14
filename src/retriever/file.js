@@ -1,10 +1,8 @@
-'use strict'
-
-import fs from 'fs'
-import Promise from 'bluebird'
+const fs = require('fs')
+const Promise = require('bluebird')
 
 const readFileAsync = Promise.promisify(fs.readFile)
 
-export default function createFileRetriever (defaults = { }) {
+module.exports = function createFileRetriever (defaults = { }) {
   return async (uri, options = { }) => await readFileAsync(uri, { encoding: 'utf8', ...defaults, ...options })
 }

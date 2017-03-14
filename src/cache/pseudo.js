@@ -1,6 +1,4 @@
-'use strict'
-
-export default function createPseudoCache () {
+module.exports = function createPseudoCache () {
   return {
     getConfig: () => ({ }),
     exists: (id) => false,

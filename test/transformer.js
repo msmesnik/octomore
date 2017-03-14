@@ -1,10 +1,10 @@
-'use strict'
-
 /* eslint-env mocha */
 
 import { expect } from 'chai'
 
-import createTransformer, * as t from '../src/transformer'
+import * as t from '../src/transformer'
+
+const { createTransformer } = t
 
 describe('data transformer', function () {
   const mockData = require('./mock/raw.json')

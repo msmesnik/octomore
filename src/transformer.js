@@ -1,13 +1,11 @@
-'use strict'
-
-import getDebugger from 'debug'
-import objectPath from 'object-path'
-import Promise from 'bluebird'
+const getDebugger = require('debug')
+const objectPath = require('object-path')
+const Promise = require('bluebird')
 
 const debug = getDebugger('octomore:transformer')
-export const noTransform = (raw) => raw
+const noTransform = (raw) => raw
 
-export default function createTransformer (...specs) {
+function createTransformer (...specs) {
   debug('Creating transformer for %s specs', specs.length)
 
   specs.forEach(validateSpec)
@@ -30,7 +28,7 @@ export default function createTransformer (...specs) {
   }, rawData)
 }
 
-export function createAdditiveTransformer (...specs) {
+function createAdditiveTransformer (...specs) {
   return async (rawData) => await Promise.reduce(specs, async (data, spec) => {
     const applyTransform = createTransformer(spec)
     const transformed = await applyTransform(data)
@@ -39,7 +37,7 @@ export function createAdditiveTransformer (...specs) {
   }, rawData)
 }
 
-export function validateSpec (spec) {
+function validateSpec (spec) {
   const specType = typeof spec
   const isFunction = specType === 'function'
   const isObject = specType === 'object'
@@ -59,7 +57,7 @@ export function validateSpec (spec) {
   })
 }
 
-export async function getTransformedData (propSpec, targetProp, rawData) {
+async function getTransformedData (propSpec, targetProp, rawData) {
   const specType = typeof propSpec
 
   if (specType === 'boolean') {
@@ -107,4 +105,12 @@ export async function getTransformedData (propSpec, targetProp, rawData) {
 
     return await applyTransform(rawValue)
   }
+}
+
+module.exports = {
+  noTransform,
+  createTransformer,
+  createAdditiveTransformer,
+  validateSpec,
+  getTransformedData
 }

@@ -1,5 +1,3 @@
-'use strict'
-
 /* eslint-env mocha */
 
 import { expect } from 'chai'
