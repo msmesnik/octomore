@@ -30,11 +30,26 @@ _WIP_
 * `friendlyName`: string used to identify document type in debug output (defaults to `Document`)
 
 
+```js
+const { createDocument, createHttpRetriever, createTransformer } = require('octomore')
+
+const transformSpec = require('./transform-spec.js') // See "Transformers" section for an actual example
+
+const getUser = createDocument({
+  getUri: (id) => `https://my.api/v1/user/${id}`,
+  retriever: createHttpRetriever(),
+  transformer: createTransformer(transformSpec),
+  friendlyName: 'User'
+})
+
+getUser(123).then((data) => console.dir(data))
+```
+
 ### Retrievers
-A retriever is a simple async function that will be called to retrieve raw data. It receives two parameters - the document URI (as returned by either the `getUri` function or the `uriTemplate`) and any additional options passed to the request. octomore comes bundles with two retrievers: a file retriever for reading data from local files and an HTTP retriever for retrieving data from the internet.  
+A retriever is a simple async function that will be called to retrieve raw data. It receives two parameters - the document URI (as returned by the `getUri` function) and any additional options passed to the request. octomore comes bundles with two retrievers: a file retriever for reading data from local files and an HTTP retriever for retrieving data from the internet (see "Bundled Retrievers" section below).  
  
 ### Transformers
-A transformer is an async function that receives raw source data and returns transformed output. Of course, this is the exact concept of a reducer (and [bluebirds](http://bluebirdjs.com/) `Promise.reduce` is exactly what powers much of the underlying mechanisms of octomore).  
+A transformer is an async function that receives raw source data and returns transformed output. Of course, this is the exact concept of a reducer (and [bluebirds](http://bluebirdjs.com/) `Promise.reduce` is precisely what powers much of the underlying mechanisms of octomore).  
 
 #### `createTransformer` API
 `createTransformer (function|object[, ...]) -> function`
