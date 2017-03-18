@@ -23,7 +23,7 @@ describe('document', function () {
       // Removed for now since this won't pass on chai 3.5 with an async function
       // expect(doc).to.be.a('function')
       expect(doc.config).to.be.an('object')
-      expect(doc.config).to.have.all.keys([ 'retriever', 'rawCache', 'transformedCache', 'getFullUri', 'getCacheId' ])
+      expect(doc.config).to.have.all.keys([ 'retriever', 'rawCache', 'transformedCache', 'getUri', 'getCacheId' ])
     })
 
     it('retrieves data and applies transformation', async function () {

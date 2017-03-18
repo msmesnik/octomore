@@ -7,22 +7,21 @@ const createPseudoCache = require('./cache/pseudo')
 const debug = getDebugger('octomore:document')
 const hashString = (str, algorithm = 'md5') => crypto.createHash(algorithm).update(str).digest('hex')
 
-module.exports = function createDocument ({ retriever, uriTemplate, getUri = (id) => `${id}`, transformer = noTransform, rawCache = false, transformedCache = false, getCacheId = hashString, friendlyName = 'Document' }) {
+module.exports = function createDocument ({ retriever, getUri = (id) => `${id}`, transformer = noTransform, rawCache = false, transformedCache = false, getCacheId = hashString, friendlyName = 'Document' }) {
   if (typeof retriever !== 'function') {
-    throw new Error('A retriever function must be provided when defining a document.')
+    throw new Error('A retriever function must be provided when creating a document.')
   }
 
-  if (typeof getUri !== 'function' && typeof uriTemplate !== 'string') {
-    throw new Error('You must provide either an "uriTemplate" string or a "getUri" function when creating a new document.')
+  if (typeof getUri !== 'function') {
+    throw new Error('A getUri function must be provided when creating a document.')
   }
 
   const cache = { raw: rawCache || createPseudoCache(), transformed: transformedCache || createPseudoCache() }
-  const getFullUri = uriTemplate ? (id) => uriTemplate.replace(/\{id\}/i, id) : getUri
   const isInCache = async (id, cache) => await cache.exists(id) && !(await cache.isOutdated(id))
 
   let getTransformedData = async (id, options) => {
     const debugDoc = (msg, ...params) => debug(`[%s %s] ${msg}`, friendlyName, id, ...params)
-    const uri = await getFullUri(id, options)
+    const uri = await getUri(id, options)
     const cacheId = await getCacheId(uri)
     const cachedTransformedData = await isInCache(cacheId, cache.transformed)
 
@@ -57,7 +56,7 @@ module.exports = function createDocument ({ retriever, uriTemplate, getUri = (id
     retriever,
     rawCache,
     transformedCache,
-    getFullUri,
+    getUri,
     getCacheId
   }
 
