@@ -4,6 +4,7 @@ const Promise = require('bluebird')
 
 const debug = getDebugger('octomore:transformer')
 const noTransform = (raw) => raw
+const isExcluded = (targetSpec) => typeof targetSpec === 'boolean' && !targetSpec
 
 function createTransformer (...specs) {
   debug('Creating transformer for %s specs', specs.length)
@@ -20,7 +21,13 @@ function createTransformer (...specs) {
     debug('Spec at index %s is an object', index)
 
     return await Promise.reduce(Object.keys(spec), async (obj, targetProp) => {
-      return Object.assign({ }, obj, { [targetProp]: await getTransformedData(spec[targetProp], targetProp, data) })
+      const targetSpec = spec[targetProp]
+
+      if (isExcluded(targetSpec)) {
+        return obj
+      }
+
+      return Object.assign({ }, obj, { [targetProp]: await getTransformedData(targetSpec, targetProp, data) })
     }, { })
   }, rawData)
 }
@@ -30,7 +37,15 @@ function createAdditiveTransformer (...specs) {
     const applyTransform = createTransformer(spec)
     const transformed = await applyTransform(data)
 
-    return Object.assign({ }, data, transformed)
+    let obj = Object.assign({ }, data, transformed)
+
+    Object.keys(spec).forEach((prop) => {
+      if (isExcluded(spec[prop])) {
+        delete obj[prop]
+      }
+    })
+
+    return obj
   }, rawData)
 }
 

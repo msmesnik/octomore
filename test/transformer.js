@@ -32,7 +32,8 @@ describe('data transformer', function () {
 
     it('allows boolean specs (include property as is)', async function () {
       const applyTransform = createTransformer({
-        'string': true
+        'string': true,
+        'number': false
       })
 
       expect(await applyTransform(mockData)).to.deep.equal({ string: 'some string' })
@@ -167,16 +168,16 @@ describe('data transformer', function () {
 
   describe('additive transformer', function () {
     it('adds transformed properties to raw data', async function () {
-      const rawKeys = Object.keys(mockData)
       const applyTransform = t.createAdditiveTransformer({
         added: 'string'
       }, {
-        second: { src: 'added', transform: (raw) => `transformed ${raw}` }
+        second: { src: 'added', transform: (raw) => `transformed ${raw}` },
+        string: false
       })
 
       const transformed = await applyTransform(mockData)
 
-      expect(transformed).to.have.all.keys(rawKeys.concat([ 'added', 'second' ]))
+      expect(transformed).to.have.all.keys([ 'number', 'list', 'nested', 'added', 'second' ])
       expect(transformed.added).to.equal('some string')
       expect(transformed.second).to.equal('transformed some string')
     })

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2017-03-16
+* `[SEMVER_PATCH]` Fixed a bug that caused properties with a boolean `false` spec to still be included in transformed output 
+
 ## 2017-03-12
 * `[SEMVER_MINOR]` Second level transform specs can now be objects (will be wrapped by `createTransformer`)
 
