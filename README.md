@@ -11,7 +11,7 @@ npm install --save octomore
 ```
 
 ## Use Case
-When writing APIs a common scenario is fetching data from one source, modifying bits of that data, perhaps removing some unused parts of it, and then returning that data to the client. Depending on the structure of the source data, as well as the complexity of the required modifications, this can be a trivial or a tedious task. Things get more complex still when the fetched source data contains values that need to be use to fetch another set of data from somewhere else (e.g. fetched user data containing a list of post ids, and fetching the post title for each one of them).
+When writing APIs a common scenario is fetching data from one source, modifying bits of that data, perhaps removing some unused parts of it, and then returning that data to the client. Depending on the structure of the source data, as well as the complexity of the required modifications, this can be a trivial or a tedious task. Things get more complex still when the fetched source data contains values that need to be used to fetch another set of data from somewhere else (e.g. fetched user data containing a list of post ids, and fetching the post title for each one of them).
 
 The goal of octomore is to streamline this process by providing a simple API based on pure (async) functions for data retrieval, transformation and caching. 
 
@@ -46,7 +46,7 @@ getUser(123).then((data) => console.dir(data))
 ```
 
 ### Retrievers
-A retriever is a simple async function that will be called to retrieve raw data. It receives two parameters - the document URI (as returned by the `getUri` function) and any additional options passed to the request. octomore comes bundles with two retrievers: a file retriever for reading data from local files and an HTTP retriever for retrieving data from the internet (see "Bundled Retrievers" section below).  
+A retriever is a simple async function that will be called to retrieve raw data. It receives two parameters - the document URI (as returned by the `getUri` function) and any additional options passed to the request. octomore comes bundled with two retrievers: a file retriever for reading data from local files and an HTTP retriever for retrieving data from the internet (see "Bundled Retrievers" section below).  
  
 ### Transformers
 A transformer is an async function that receives raw source data and returns transformed output. Of course, this is the exact concept of a reducer (and [bluebirds](http://bluebirdjs.com/) `Promise.reduce` is precisely what powers much of the underlying mechanisms of octomore).  
@@ -63,7 +63,7 @@ When dealing with XML source data, for instance, this can be used as the first s
 
 ##### Object Specs
 The real power of octomore lies in the declarative approach of object specs. These allow specifying the structure of the transformed output and applying transformation functions on several levels.
-At its core, an object spec defines properties present in transformed output, mapping their values to values in source data. Like many things in programming, this is propably best illustrated by a simple, if somewhat contrived, example.
+At its core, an object spec defines properties present in transformed output, mapping their values to values in source data. Like many things in programming, this is probably best illustrated by a simple, if somewhat contrived, example.
 
 ```js
 const { createTransformer } = require('octomore')
@@ -113,7 +113,7 @@ As the above example demonstrates, value mappings can be specified in various wa
   * `iterate`: iterate over source data, applying transform function to each individual element (defaults to `false`)
   * `max`: maximum amount of items to include when iterating over source data (defaults to no limit)
 
-All source property names support [object-path](https://github.com/mariocasciaro/object-path) notation and all transformation functions can (but do not have to) be async or Promise returning functions. Since `createTransformer` returns a function, it can be used whereever transformation functions are supported. This means you can nest transformers for more complex scenarios while keeping the individual pieces small and testable.
+All source property names support [object-path](https://github.com/mariocasciaro/object-path) notation and all transformation functions can (but do not have to) be async or Promise returning functions. Since `createTransformer` returns a function, it can be used wherever transformation functions are supported. This means you can nest transformers for more complex scenarios while keeping the individual pieces small and testable.
 
 Transformed output will only contain properties explicitly specified. To include all properties from source data by default the provided helper function `createAdditiveTransformer` can be used. 
 
@@ -123,12 +123,12 @@ octomore provides hooks for caching both raw source data as well as transformed 
 #### Cache Object Interface
 Cache objects must implement the following functions:
 
-* `getConfig () -> object`: returns cache config
-* `exists (id) -> boolean`: returns `true` if the provided id exists in the cache (regardless of whether or not it is stale) 
+* `getConfig () -> object`: returns cache configuration
+* `exists (id) -> boolean`: returns `true` if the provided id exists in the cache (regardless of whether or not it is outdated) 
 * `isOutdated (id) -> boolean`: returns `true` if the cached resource is older than `maxLifetime` seconds
-* `store (id, data) -> void`: store provided data in the cache and associate it with the provided `id`
-* `retrieve (id) -> data`: retrieve cached data for the provided `id`
-* `remove (id) -> void`: remove cached data for the provided `id` 
+* `store (id, data) -> void`: stores provided data in the cache and associates it with the provided `id`
+* `retrieve (id) -> data`: retrieves cached data for the provided `id`
+* `remove (id) -> void`: removes cached data for the provided `id` 
 * `getRemainingLifetime (id) -> int`: returns the remaining lifetime in seconds for the provided `id` 
 
 ## Bundled Retrievers
@@ -147,7 +147,7 @@ readFile('/path/to/foo.txt').then((data) => console.log(data))
 ```
 
 ### HTTP Retriever
-Retrieve data from an HTTP endpoint (uses [request-promise](http://foo.bar) under the hood).
+Retrieves data from an HTTP endpoint (uses [request-promise](http://foo.bar) under the hood).
 
 `createHttpRetriever (defaults) -> function`
 * `defaults`: default options passed to `request-promise` on each request
