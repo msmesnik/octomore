@@ -9,16 +9,16 @@ const createPseudoCache = require('./cache/pseudo');
 const debug = getDebugger('octomore:document');
 const hashString = (str, algorithm = 'md5') => crypto.createHash(algorithm).update(str).digest('hex');
 
-module.exports = function defineDocument({ retriever, uriTemplate, getUri = id => `${id}`, transformer = noTransform, rawCache = createPseudoCache(), transformedCache = createPseudoCache(), getCacheId = hashString, friendlyName = 'Document' }) {
+module.exports = function createDocument({ retriever, getUri = id => `${id}`, transformer = noTransform, rawCache = false, transformedCache = false, getCacheId = hashString, friendlyName = 'Document' }) {
   if (typeof retriever !== 'function') {
-    throw new Error('A retriever function must be provided when defining a document.');
+    throw new Error('A retriever function must be provided when creating a document.');
   }
 
-  if (typeof getUri !== 'function' && typeof uriTemplate !== 'string') {
-    throw new Error('You must provide either an "uriTemplate" string or a "getUri" function when creating a new document.');
+  if (typeof getUri !== 'function') {
+    throw new Error('A getUri function must be provided when creating a document.');
   }
 
-  const getFullUri = uriTemplate ? id => uriTemplate.replace(/\{id\}/i, id) : getUri;
+  const cache = { raw: rawCache || createPseudoCache(), transformed: transformedCache || createPseudoCache() };
   const isInCache = (() => {
     var _ref = _asyncToGenerator(function* (id, cache) {
       return (yield cache.exists(id)) && !(yield cache.isOutdated(id));
@@ -34,33 +34,33 @@ module.exports = function defineDocument({ retriever, uriTemplate, getUri = id =
       const debugDoc = function (msg, ...params) {
         return debug(`[%s %s] ${msg}`, friendlyName, id, ...params);
       };
-      const uri = yield getFullUri(id, options);
+      const uri = yield getUri(id, options);
       const cacheId = yield getCacheId(uri);
-      const cachedTransformedData = yield isInCache(cacheId, transformedCache);
+      const cachedTransformedData = yield isInCache(cacheId, cache.transformed);
 
       if (cachedTransformedData) {
         debug('Returning cached transformed data for uri %s (cache id %s).', uri, cacheId);
 
-        return yield transformedCache.retrieve(cacheId);
+        return yield cache.transformed.retrieve(cacheId);
       }
 
-      const cachedRawData = yield isInCache(cacheId, rawCache);
+      const cachedRawData = yield isInCache(cacheId, cache.raw);
 
       debugDoc('Retrieving raw data from %s, full uri is %s (cache id %s)', cachedRawData ? 'cache' : 'source', uri, cacheId);
 
-      const raw = cachedRawData ? yield rawCache.retrieve(cacheId) : yield retriever(uri, options);
+      const raw = cachedRawData ? yield cache.raw.retrieve(cacheId) : yield retriever(uri, options);
 
       debugDoc('Raw data retrieved - applying transformation');
 
       if (!cachedRawData) {
-        yield rawCache.store(cacheId, raw);
+        yield cache.raw.store(cacheId, raw);
       }
 
       const transformed = yield transformer(raw);
 
       debugDoc('Transformation applied');
 
-      yield transformedCache.store(cacheId, transformed);
+      yield cache.transformed.store(cacheId, transformed);
 
       return transformed;
     });
@@ -74,7 +74,7 @@ module.exports = function defineDocument({ retriever, uriTemplate, getUri = id =
     retriever,
     rawCache,
     transformedCache,
-    getFullUri,
+    getUri,
     getCacheId
   };
 
