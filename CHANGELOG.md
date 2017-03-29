@@ -1,5 +1,8 @@
 # Changelog
 
+## 2017-03-29
+* `[SEMVER_PATCH]` Transformers will no longer output warnings via `console.warn` - they will now use the `debug` module instead
+
 ## 2017-03-16
 * `[SEMVER_MAJOR]` Removed `uriTemplate` param - document URIs will now always be determined by the provided `getUri` function
 * `[SEMVER_PATCH]` Fixed a bug that caused properties with a boolean `false` spec to still be included in transformed output 
