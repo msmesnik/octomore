@@ -170,3 +170,19 @@ Stores data in flat files, defaults to storing data in JSON format.
 * `directory`: directory where cache files will be stored (default `cache`)
 * `extension`: filename extension for cache files (default `json`)
 * `json`: if `true`, data will be `JSON.stringify`'d before writing to disk and `JSON.parse`'d when retrieving (default `true`)
+
+## Misc
+### Testing
+```
+npm run test
+```
+### Debugging
+octomore uses [debug](https://github.com/visionmedia/debug) - to activate debug output set the `DEBUG` environment variable to `octomore:*` (or whichever subset of output you're interested in).
+
+```
+DEBUG=octomore:* npm run test
+```
+
+### Todo
+* Finish README
+* Make debug output less verbose and more useful
