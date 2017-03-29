@@ -47,7 +47,7 @@ let getTransformedData = (() => {
         debug('Target "%s" - iterating over value of source property "%s" (max %s items)', targetProp, sourceProp, max);
 
         if (!isIterable) {
-          console.warn('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp);
+          debug('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp);
         }
 
         return yield Promise.map(iterable.slice(0, max), applyTransform);
