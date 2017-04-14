@@ -1,6 +1,8 @@
 # Changelog
 
-
+## Not Released/WIP
+* Refactored linting config: due to recent updates of the [standard](https://github.com/feross/standard package we no longer need to include all sorts of `eslint-*` dev dependencies and configs to lint es6 code.
+* `[SEMVER_PATCH]` Removed various redundant `return await` statements
 * `[SEMVER_MINOR]` `debug` function is now injected into `createDocument`, `createTransformer` and `createFileCache` (no changes to default behavior)
  
 ## 2017-03-29
