@@ -4,10 +4,10 @@ const getDebugger = require('debug')
 const { noTransform } = require('./transformer')
 const createPseudoCache = require('./cache/pseudo')
 
-const debug = getDebugger('octomore:document')
+const defaultDebugger = getDebugger('octomore:document')
 const hashString = (str, algorithm = 'md5') => crypto.createHash(algorithm).update(str).digest('hex')
 
-module.exports = function createDocument ({ retriever, getUri = (id) => `${id}`, transformer = noTransform, rawCache = false, transformedCache = false, getCacheId = hashString, friendlyName = 'Document' }) {
+module.exports = function createDocument ({ retriever, getUri = (id) => `${id}`, transformer = noTransform, rawCache = false, transformedCache = false, getCacheId = hashString, friendlyName = 'Document', debug = defaultDebugger }) {
   if (typeof retriever !== 'function') {
     throw new Error('A retriever function must be provided when creating a document.')
   }

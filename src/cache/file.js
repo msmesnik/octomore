@@ -3,11 +3,11 @@ const fs = require('fs-extra')
 const path = require('path')
 const Promise = require('bluebird')
 
-const debug = getDebugger('octomore:cache:file')
+const defaultDebugger = getDebugger('octomore:cache:file')
 
 Promise.promisifyAll(fs)
 
-module.exports = function createFileCache ({ lifetime = 0, directory = 'cache', extension = 'json', json = true } = { }) {
+module.exports = function createFileCache ({ lifetime = 0, directory = 'cache', extension = 'json', json = true, debug = defaultDebugger } = { }) {
   debug('Creating file cache object. Lifetime is %s sec, cache directory is "%s", file extension is "%s".', lifetime, directory, extension)
 
   const getFullPath = (id) => path.resolve(directory, `${id}.${extension}`)
