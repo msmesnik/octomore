@@ -11,16 +11,16 @@ function createTransformer (...specs) {
 
   specs.forEach(validateSpec)
 
-  return async (rawData) => await Promise.reduce(specs, async (data, spec, index) => {
+  return async (rawData) => Promise.reduce(specs, async (data, spec, index) => {
     if (typeof spec === 'function') {
       debug('Spec at index %s is a function', index)
 
-      return await spec(data)
+      return spec(data)
     }
 
     debug('Spec at index %s is an object', index)
 
-    return await Promise.reduce(Object.keys(spec), async (obj, targetProp) => {
+    return Promise.reduce(Object.keys(spec), async (obj, targetProp) => {
       const targetSpec = spec[targetProp]
 
       if (isExcluded(targetSpec)) {
@@ -33,7 +33,7 @@ function createTransformer (...specs) {
 }
 
 function createAdditiveTransformer (...specs) {
-  return async (rawData) => await Promise.reduce(specs, async (data, spec) => {
+  return async (rawData) => Promise.reduce(specs, async (data, spec) => {
     const applyTransform = createTransformer(spec)
     const transformed = await applyTransform(data)
 
@@ -87,13 +87,13 @@ async function getTransformedData (propSpec, targetProp, rawData) {
   if (specType === 'function') {
     debug('Calling first-level transform function for property "%s"', targetProp)
 
-    return await propSpec(rawData)
+    return propSpec(rawData)
   }
 
   if (Array.isArray(propSpec)) {
     debug('Array of specs encountered for property "%s" - recursing', targetProp)
 
-    return await Promise.all(propSpec.map(async (subSpec) => await getTransformedData(subSpec, targetProp, rawData)))
+    return Promise.all(propSpec.map(async (subSpec) => getTransformedData(subSpec, targetProp, rawData)))
   }
 
   if (specType === 'object') {
@@ -112,10 +112,10 @@ async function getTransformedData (propSpec, targetProp, rawData) {
         debug('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp)
       }
 
-      return await Promise.map(iterable.slice(0, max), applyTransform)
+      return Promise.map(iterable.slice(0, max), applyTransform)
     }
 
-    return await applyTransform(rawValue)
+    return applyTransform(rawValue)
   }
 }
 
