@@ -1,5 +1,8 @@
 # Changelog
 
+
+* `[SEMVER_MINOR]` `debug` function is now injected into `createDocument`, `createTransformer` and `createFileCache` (no changes to default behavior)
+ 
 ## 2017-03-29
 * `[SEMVER_PATCH]` Transformers will no longer output warnings via `console.warn` - they will now use the `debug` module instead
 
