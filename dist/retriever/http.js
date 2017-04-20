@@ -2,10 +2,10 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const request = require('request-promise');
 
-module.exports = function createHttpRetriever(defaults = {}) {
+module.exports = function createHttpRetriever(defaults = {}, { requestFn = request } = {}) {
   return (() => {
     var _ref = _asyncToGenerator(function* (uri, options = {}) {
-      return yield request(Object.assign({}, defaults, options, { uri }));
+      return requestFn(Object.assign({}, defaults, options, { uri }));
     });
 
     return function (_x) {

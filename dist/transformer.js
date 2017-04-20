@@ -17,15 +17,15 @@ let getTransformedData = (() => {
     if (specType === 'function') {
       debug('Calling first-level transform function for property "%s"', targetProp);
 
-      return yield propSpec(rawData);
+      return propSpec(rawData);
     }
 
     if (Array.isArray(propSpec)) {
       debug('Array of specs encountered for property "%s" - recursing', targetProp);
 
-      return yield Promise.all(propSpec.map((() => {
+      return Promise.all(propSpec.map((() => {
         var _ref7 = _asyncToGenerator(function* (subSpec) {
-          return yield getTransformedData(subSpec, targetProp, rawData);
+          return getTransformedData(subSpec, targetProp, rawData);
         });
 
         return function (_x13) {
@@ -50,10 +50,10 @@ let getTransformedData = (() => {
           debug('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp);
         }
 
-        return yield Promise.map(iterable.slice(0, max), applyTransform);
+        return Promise.map(iterable.slice(0, max), applyTransform);
       }
 
-      return yield applyTransform(rawValue);
+      return applyTransform(rawValue);
     }
   });
 
@@ -79,17 +79,17 @@ function createTransformer(...specs) {
 
   return (() => {
     var _ref = _asyncToGenerator(function* (rawData) {
-      return yield Promise.reduce(specs, (() => {
+      return Promise.reduce(specs, (() => {
         var _ref2 = _asyncToGenerator(function* (data, spec, index) {
           if (typeof spec === 'function') {
             debug('Spec at index %s is a function', index);
 
-            return yield spec(data);
+            return spec(data);
           }
 
           debug('Spec at index %s is an object', index);
 
-          return yield Promise.reduce(Object.keys(spec), (() => {
+          return Promise.reduce(Object.keys(spec), (() => {
             var _ref3 = _asyncToGenerator(function* (obj, targetProp) {
               const targetSpec = spec[targetProp];
 
@@ -121,7 +121,7 @@ function createTransformer(...specs) {
 function createAdditiveTransformer(...specs) {
   return (() => {
     var _ref4 = _asyncToGenerator(function* (rawData) {
-      return yield Promise.reduce(specs, (() => {
+      return Promise.reduce(specs, (() => {
         var _ref5 = _asyncToGenerator(function* (data, spec) {
           const applyTransform = createTransformer(spec);
           const transformed = yield applyTransform(data);

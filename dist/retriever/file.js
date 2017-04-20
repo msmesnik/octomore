@@ -8,7 +8,7 @@ const readFileAsync = Promise.promisify(fs.readFile);
 module.exports = function createFileRetriever(defaults = {}) {
   return (() => {
     var _ref = _asyncToGenerator(function* (uri, options = {}) {
-      return yield readFileAsync(uri, Object.assign({ encoding: 'utf8' }, defaults, options));
+      return readFileAsync(uri, Object.assign({ encoding: 'utf8' }, defaults, options));
     });
 
     return function (_x) {
