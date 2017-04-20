@@ -3,8 +3,6 @@
 
 octomore is an efficient, functional data retrieval and transformation library for node.js. It is named after the heavily peated [scotch whisky](https://www.bruichladdich.com/octomore) (which has absolutely nothing to do with this library). 
 
-*This entire document is a work in progress.*
-
 ## Installation
 ```
 npm install --save octomore
@@ -17,7 +15,7 @@ The goal of octomore is to streamline this process by providing a simple API bas
 
 ## Concepts
 ### Documents
-_WIP_
+A document is a collection of functions that together fetch raw data from somewhere, apply a transformation and then return that data. Both raw source data as well as transformed output can be cached by supplying a cache object to the `createDocument` function.  
 
 #### `createDocument` API
 `createDocument ({ retriever, getUri, transformer, rawCache, transformedCache, getCacheId, friendlyName }) -> function`
@@ -186,5 +184,4 @@ DEBUG=octomore:* npm run test
 ```
 
 ### Todo
-* Finish README
 * Make debug output less verbose and more useful
