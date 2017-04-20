@@ -147,10 +147,12 @@ readFile('/path/to/foo.txt').then((data) => console.log(data))
 ```
 
 ### HTTP Retriever
-Retrieves data from an HTTP endpoint (uses [request-promise](http://foo.bar) under the hood).
+Retrieves data from an HTTP endpoint (uses [request-promise](http://foo.bar) under the hood by default).
 
-`createHttpRetriever (defaults) -> function`
+`createHttpRetriever (defaults, config) -> function`
 * `defaults`: default options passed to `request-promise` on each request
+* `config`: object
+   * `request`: function used to actually perform the HTTP request (defaults to `request-promise`)
 
 ```js
 const { createHttpRetriever } = require('octomore')
