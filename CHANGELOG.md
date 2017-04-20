@@ -1,8 +1,9 @@
 # Changelog
 
-## Not Released/WIP
-* Refactored linting config: due to recent updates of the [standard](https://github.com/feross/standard package we no longer need to include all sorts of `eslint-*` dev dependencies and configs to lint es6 code.
+## 2017-04-20
+* Refactored linting config: due to recent updates of the [standard](https://github.com/feross/standard) package we no longer need to include all sorts of `eslint-*` dev dependencies and configs to lint es6 code.
 * `[SEMVER_PATCH]` Removed various redundant `return await` statements
+* `[SEMVER_PATCH]` `request` function is now injected into HTTP retrievers for easier mocking (see README)
 
 ## 2017-03-29
 * `[SEMVER_PATCH]` Transformers will no longer output warnings via `console.warn` - they will now use the `debug` module instead
