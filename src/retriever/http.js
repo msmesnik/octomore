@@ -1,5 +1,5 @@
 const request = require('request-promise')
 
-module.exports = function createHttpRetriever (defaults = { }) {
-  return async (uri, options = { }) => request(Object.assign({ }, defaults, options, { uri }))
+module.exports = function createHttpRetriever (defaults = { }, { requestFn = request } = { }) {
+  return async (uri, options = { }) => requestFn(Object.assign({ }, defaults, options, { uri }))
 }
