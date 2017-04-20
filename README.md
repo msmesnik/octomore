@@ -152,7 +152,7 @@ Retrieves data from an HTTP endpoint (uses [request-promise](http://foo.bar) und
 `createHttpRetriever (defaults, config) -> function`
 * `defaults`: default options passed to `request-promise` on each request
 * `config`: object
-   * `request`: function used to actually perform the HTTP request (defaults to `request-promise`)
+   * `requestFn`: function used to actually perform the HTTP request (defaults to `request-promise`)
 
 ```js
 const { createHttpRetriever } = require('octomore')
