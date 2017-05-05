@@ -3,7 +3,8 @@
 ## Not Released/WIP
 * Refactored linting config: due to recent updates of the [standard](https://github.com/feross/standard package we no longer need to include all sorts of `eslint-*` dev dependencies and configs to lint es6 code.
 * `[SEMVER_PATCH]` Removed various redundant `return await` statements
-* `[SEMVER_MINOR]` `debug` function is now injected into `createDocument`, `createTransformer` and `createFileCache` (no changes to default behavior)
+* `[SEMVER_MINOR]` Refactored logging - while default functionality remains unchanged you can now inject your own logger object into `createDocument` and `createFileCache` (see README for details)
+* `[SEMVER_MINOR]` Removed debug output from `createTransformer` - it was overly verbose and hardly useful but would have been awkward to integrate with the aforementioned changes in logging 
  
 ## 2017-03-29
 * `[SEMVER_PATCH]` Transformers will no longer output warnings via `console.warn` - they will now use the `debug` module instead
