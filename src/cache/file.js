@@ -1,65 +1,69 @@
-const getDebugger = require('debug')
 const fs = require('fs-extra')
 const path = require('path')
 const Promise = require('bluebird')
 
-const defaultDebugger = getDebugger('octomore:cache:file')
+const { createLogger } = require('../logger')
 
 Promise.promisifyAll(fs)
 
-module.exports = function createFileCache ({ lifetime = 0, directory = 'cache', extension = 'json', json = true, debug = defaultDebugger } = { }) {
-  debug('Creating file cache object. Lifetime is %s sec, cache directory is "%s", file extension is "%s".', lifetime, directory, extension)
+module.exports = function createFileCache ({ lifetime = 0, directory = 'cache', extension = 'json', json = true, logger = createLogger('octomore:cache:file') } = { }) {
+  logger.verbose('Creating file cache object. Lifetime is %s sec, cache directory is "%s", file extension is "%s".', lifetime, directory, extension)
 
   const getFullPath = (id) => path.resolve(directory, `${id}.${extension}`)
 
   const getConfig = () => ({ lifetime, directory, extension })
+
   const exists = async (id) => {
     const fullPath = getFullPath(id)
 
-    debug('Checking if file %s exists', fullPath)
+    logger.verbose('Checking if file %s exists', fullPath)
 
     try {
       await fs.accessAsync(fullPath)
 
-      debug('File %s exists', fullPath)
+      logger.debug('File %s exists', fullPath)
 
       return true
     } catch (e) {
-      debug('Cannot access file %s (error message: %s)', fullPath, e.message)
+      logger.verbose('Cannot access file %s (error message: %s)', fullPath, e.message)
 
       return false
     }
   }
+
   const store = async (id, data) => {
     const fullPath = getFullPath(id)
 
-    debug('Attempting to write cache file %s', fullPath)
+    logger.verbose('Attempting to write cache file %s', fullPath)
 
     await fs.ensureDirAsync(path.dirname(fullPath))
     await fs.writeFileAsync(fullPath, json ? JSON.stringify(data) : data, { encoding: 'utf8' })
 
-    debug('Cache file %s written', fullPath)
+    logger.debug('Cache file %s written', fullPath)
   }
+
   const retrieve = async (id) => {
     const fullPath = getFullPath(id)
 
-    debug('Attempting to read cache file %s', fullPath)
+    logger.verbose('Attempting to read cache file %s', fullPath)
 
     const raw = await fs.readFileAsync(fullPath, 'utf8')
 
-    debug('Cache file %s read, JSON.parse()ing contents.', fullPath)
+    logger.debug('Cache file %s read, JSON.parse()ing contents.', fullPath)
 
     return json ? JSON.parse(raw) : raw
   }
+
   const remove = async (id) => {
     const fullPath = getFullPath(id)
 
-    debug('Attempting to remove cache file %s', fullPath)
+    logger.verbose('Attempting to remove cache file %s', fullPath)
 
     await fs.unlinkAsync(fullPath)
 
-    debug('Cache file %s removed', fullPath)
+    logger.debug('Cache file %s removed', fullPath)
   }
+
   const getRemainingLifetime = async (id) => {
     const fullPath = getFullPath(id)
 
@@ -68,10 +72,11 @@ module.exports = function createFileCache ({ lifetime = 0, directory = 'cache', 
     const age = (now - mtime) / 1000
     const remaining = age >= lifetime ? 0 : lifetime - age
 
-    debug('mtime for cache file %s is %s, now is %s, age is therefore %s sec. Lifetime is %s sec, thus %s sec remain.', fullPath, mtime, now, age, lifetime, remaining)
+    logger.debug('mtime for cache file %s is %s, now is %s, age is therefore %s sec. Lifetime is %s sec, thus %s sec remain.', fullPath, mtime, now, age, lifetime, remaining)
 
     return remaining
   }
+
   const isOutdated = async (id) => await getRemainingLifetime(id) === 0
 
   return {
