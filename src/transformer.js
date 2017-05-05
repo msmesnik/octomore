@@ -1,24 +1,16 @@
-const getDebugger = require('debug')
 const objectPath = require('object-path')
 const Promise = require('bluebird')
 
-const debug = getDebugger('octomore:transformer')
 const noTransform = (raw) => raw
 const isExcluded = (targetSpec) => typeof targetSpec === 'boolean' && !targetSpec
 
 function createTransformer (...specs) {
-  debug('Creating transformer for %s specs', specs.length)
-
   specs.forEach(validateSpec)
 
   return async (rawData) => Promise.reduce(specs, async (data, spec, index) => {
     if (typeof spec === 'function') {
-      debug('Spec at index %s is a function', index)
-
       return spec(data)
     }
-
-    debug('Spec at index %s is an object', index)
 
     return Promise.reduce(Object.keys(spec), async (obj, targetProp) => {
       const targetSpec = spec[targetProp]
@@ -73,26 +65,18 @@ async function getTransformedData (propSpec, targetProp, rawData) {
   const specType = typeof propSpec
 
   if (specType === 'boolean') {
-    debug('Including property "%s" as is (boolean spec)', targetProp)
-
     return rawData[targetProp]
   }
 
   if (specType === 'string') {
-    debug('Mapping original name "%s" to target property "%s"', propSpec, targetProp)
-
     return objectPath.get(rawData, propSpec)
   }
 
   if (specType === 'function') {
-    debug('Calling first-level transform function for property "%s"', targetProp)
-
     return propSpec(rawData)
   }
 
   if (Array.isArray(propSpec)) {
-    debug('Array of specs encountered for property "%s" - recursing', targetProp)
-
     return Promise.all(propSpec.map(async (subSpec) => getTransformedData(subSpec, targetProp, rawData)))
   }
 
@@ -105,12 +89,6 @@ async function getTransformedData (propSpec, targetProp, rawData) {
       const isIterable = Array.isArray(rawValue)
       const iterable = typeof rawValue === 'undefined' ? [ ] : (isIterable ? rawValue : [ rawValue ])
       const { max = iterable.length } = propSpec
-
-      debug('Target "%s" - iterating over value of source property "%s" (max %s items)', targetProp, sourceProp, max)
-
-      if (!isIterable) {
-        debug('Attempted to iterate over non-array property "%s". Coerced it into an array.', sourceProp)
-      }
 
       return Promise.map(iterable.slice(0, max), applyTransform)
     }
