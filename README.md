@@ -184,6 +184,3 @@ octomore uses [debug](https://github.com/visionmedia/debug) by default - to acti
 DEBUG=octomore:* npm run test
 ```
 You can, however, supply your own logger object to `createDocument` and `createFileCache` (e.g. a [winston](https://github.com/winstonjs/winston) instance). This object must implement `debug` and `verbose` methods - other log levels (`info`, `warn` and `error`) are not currently used, though they might be in the future.
-
-### Todo
-* Make debug output less verbose and more useful
