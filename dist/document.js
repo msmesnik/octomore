@@ -38,7 +38,7 @@ module.exports = function createDocument({ retriever, getUri = id => `${id}`, tr
       const cachedTransformedData = yield isInCache(cacheId, cache.transformed);
 
       if (cachedTransformedData) {
-        logger.verbose(getLogMessage('Returning cached transformed data for uri %s (cache id %s).', uri, cacheId));
+        logger.verbose(getLogMessage('Returning cached transformed data for uri %s (cache id %s).'), uri, cacheId);
 
         return cache.transformed.retrieve(cacheId);
       }
