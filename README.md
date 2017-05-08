@@ -26,6 +26,7 @@ A document is a collection of functions that together fetch raw data from somewh
 * `transformedCache`: cache object used for caching transformed data - see "Caching" section below (defaults to no cache)
 * `getCacheId`: function that recieves the full document URI and returns a cache id for that URI (defaults to MD5 hash of document URI)
 * `friendlyName`: string used to identify document type in debug output (defaults to `Document`)
+* `logger`: logger object implementing at least `debug` and `verbose` methods (default [debug](https://github.com/visionmedia/debug) module using `octomore:document` identifier)
 
 
 ```js
@@ -165,23 +166,24 @@ getData('https://my.api/v1/user/123').then((data) => console.dir(data))
 ### File Cache
 Stores data in flat files, defaults to storing data in JSON format.
 
-`createFileCache({ lifetime, directory, extension, json }) -> object`
+`createFileCache({ lifetime, directory, extension, json, logger }) -> object`
 * `lifetime`: cache lifetime in seconds (default `0`)
 * `directory`: directory where cache files will be stored (default `cache`)
 * `extension`: filename extension for cache files (default `json`)
 * `json`: if `true`, data will be `JSON.stringify`'d before writing to disk and `JSON.parse`'d when retrieving (default `true`)
+* `logger`: logger object implementing at least `debug` and `verbose` methods (default [debug](https://github.com/visionmedia/debug) module using `octomore:cache:file` identifier)
 
 ## Misc
 ### Testing
 ```
 npm run test
 ```
-### Debugging
-octomore uses [debug](https://github.com/visionmedia/debug) - to activate debug output set the `DEBUG` environment variable to `octomore:*` (or whichever subset of output you're interested in).
-
+### Debugging/Logging
+octomore uses [debug](https://github.com/visionmedia/debug) by default - to activate debug output set the `DEBUG` environment variable to `octomore:*` (or whichever subset of output you're interested in).  
 ```
 DEBUG=octomore:* npm run test
 ```
+You can, however, supply your own logger object to `createDocument` and `createFileCache` (e.g. a [winston](https://github.com/winstonjs/winston) instance). This object must implement `debug` and `verbose` methods - other log levels (`info`, `warn` and `error`) are not currently used, though they might be in the future.
 
 ### Todo
 * Make debug output less verbose and more useful
