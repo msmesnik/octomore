@@ -24,7 +24,7 @@ A document is a collection of functions that together fetch raw data from somewh
 * `transformer`: function that recieves raw source data and returns transformed data - see "Transformers" section below (defaults to no transformation)
 * `rawCache`: cache object used for caching raw source data - see "Caching" section below (defaults to no cache)
 * `transformedCache`: cache object used for caching transformed data - see "Caching" section below (defaults to no cache)
-* `getCacheId`: function that recieves the full document URI and returns a cache id for that URI (defaults to MD5 hash of document URI)
+* `getCacheId`: function that recieves the full document URI as well as any `options` passed to the document and returns a cache id for that URI (defaults to MD5 hash of document URI)
 * `friendlyName`: string used to identify document type in debug output (defaults to `Document`)
 * `logger`: logger object implementing at least `debug` and `verbose` methods (default [debug](https://github.com/visionmedia/debug) module using `octomore:document` identifier)
 
@@ -41,7 +41,8 @@ const getUser = createDocument({
   friendlyName: 'User'
 })
 
-getUser(123).then((data) => console.dir(data))
+// The optional second parameter will be passed to the specified retriever, getUri and getCacheId functions 
+getUser(123, { extraOption: 'some value' }).then((data) => console.dir(data))
 ```
 
 ### Retrievers
