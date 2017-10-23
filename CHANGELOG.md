@@ -2,6 +2,7 @@
 
 ## 2017-10-32
 * `[SEMVER_MAJOR]` Removed transpiling dependencies and scripts. octomore now requires nodejs `>= 7.6.0` for native `async` function support.  
+* `[SEMVER_MINOR]` `getCacheId` now receives the `options` object that is also passed to `getUri` and `retriever` as a second parameter. This means that you can now, optionally, base your cache id on the uri (as returned by `getUri`) as well as any additional options passed to the document.   
 
 ## 2017-05-08
 * `[SEMVER_MINOR]` Refactored logging - while default functionality remains unchanged you can now inject your own logger object into `createDocument` and `createFileCache` (see README for details)
