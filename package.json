@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "preversion": "npm run lint && npm run test && npm run babel:transpile && git add dist/* && (git commit -m \"transpile\" || echo \"skipping transpile commit\")",
-    "babel:transpile": "rm -rf dist/* && babel --no-comments src -d dist",
-    "babel:watch": "npm run babel:transpile -- --watch",
-    "lint": "standard \"src/**/*.js\"",
-    "test": "mocha --require test/helpers/babel-register"
+    "preversion": "npm run lint && npm run test",
+    "lint": "standard \"lib/**/*.js\"",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,7 +20,7 @@
     ]
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=7.6.0"
   },
   "dependencies": {
     "bluebird": "^3.4.7",
@@ -33,10 +31,6 @@
     "request-promise": "^4.1.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-plugin-syntax-async-functions": "^6.13.0",
-    "babel-plugin-transform-async-to-generator": "^6.22.0",
-    "babel-register": "^6.23.0",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "standard": "^10.0.1"
