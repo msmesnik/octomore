@@ -2,7 +2,7 @@
 
 const { expect } = require('chai')
 
-const t = require('../src/transformer')
+const t = require('../lib/transformer')
 
 const { createTransformer } = t
 
@@ -140,7 +140,7 @@ describe('data transformer', function () {
   })
 
   describe('function composition', function () {
-    // Skipping for now since this won't pass on chai 3.5 with an async function
+    // Skipping for now since this won't pass on chai 3.5 with an async function ("AssertionError: expected [Function] to be a function")
     it.skip('returns a function', function () {
       expect(createTransformer(() => undefined)).to.be.a('function')
       expect(createTransformer({ })).to.be.a('function')

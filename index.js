@@ -1,9 +1,9 @@
-const createDocument = require('./dist/document')
-const createFileCache = require('./dist/cache/file')
-const createFileRetriever = require('./dist/retriever/file')
-const createHttpRetriever = require('./dist/retriever/http')
-const createPseudoCache = require('./dist/cache/pseudo')
-const { createTransformer, createAdditiveTransformer } = require('./dist/transformer')
+const createDocument = require('./lib/document')
+const createFileCache = require('./lib/cache/file')
+const createFileRetriever = require('./lib/retriever/file')
+const createHttpRetriever = require('./lib/retriever/http')
+const createPseudoCache = require('./lib/cache/pseudo')
+const { createTransformer, createAdditiveTransformer } = require('./lib/transformer')
 
 module.exports = {
   createAdditiveTransformer,

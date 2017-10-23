@@ -4,7 +4,7 @@ const { expect } = require('chai')
 const fs = require('fs')
 
 const { verifyCacheProps } = require('./helpers/cache')
-const createFileCache = require('../src/cache/file')
+const createFileCache = require('../lib/cache/file')
 
 describe('file cache', function () {
   const directory = 'test/mock/cache'

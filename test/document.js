@@ -2,7 +2,7 @@
 
 const { expect } = require('chai')
 
-const createDocument = require('../src/document')
+const createDocument = require('../lib/document')
 
 describe('document', function () {
   describe('general functionality', function () {
