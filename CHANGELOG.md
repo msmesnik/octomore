@@ -1,5 +1,8 @@
 # Changelog
 
+## 2017-10-32
+* `[SEMVER_MAJOR]` Removed transpiling dependencies and scripts. octomore now requires nodejs `>= 7.6.0` for native `async` function support.  
+
 ## 2017-05-08
 * `[SEMVER_MINOR]` Refactored logging - while default functionality remains unchanged you can now inject your own logger object into `createDocument` and `createFileCache` (see README for details)
 * `[SEMVER_MINOR]` Removed debug output from `createTransformer` - it was overly verbose and hardly useful but would have been awkward to integrate with the aforementioned changes in logging
