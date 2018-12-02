@@ -23,16 +23,16 @@
     "node": ">=7.6.0"
   },
   "dependencies": {
-    "bluebird": "^3.4.7",
-    "debug": "^2.6.0",
-    "fs-extra": "^2.0.0",
+    "bluebird": "^3.5.3",
+    "debug": "^4.1.0",
+    "fs-extra": "^7.0.1",
     "object-path": "^0.11.3",
-    "request": "^2.79.0",
+    "request": "^2.88.0",
     "request-promise": "^4.1.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "standard": "^10.0.1"
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "standard": "^12.0.1"
   }
 }
