@@ -81,7 +81,7 @@ const source = {
 const applyTransform = createTransformer({
   id: true,
   brandName: 'brand_name',
-  fullName: ({ brand_name, aged_years }) => `${brand_name} (${aged_years} years)`,
+  fullName: ({ brand_name, age }) => `${brand_name} (${age} years)`,
   caskTypes: { src: 'casks.types', transform: (str) => str.split(', ') },
   age: { transform: (str) => parseInt(str, 10) },
   keywords: { transform: (str) => str.toUpperCase(), iterate: true, max: 3 }
